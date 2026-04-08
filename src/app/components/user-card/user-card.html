@@ -1,0 +1,22 @@
+<article class="card">
+  <div class="card-top">
+    <div>
+      <h3>{{ user().name }}</h3>
+      <p>@{{ user().username }}</p>
+    </div>
+
+    <span class="badge">#{{ user().id }}</span>
+  </div>
+
+  <div class="meta">
+    <span>{{ user().email }}</span>
+    <span>{{ user().address.city }}</span>
+    <span>{{ user().company.name }}</span>
+  </div>
+
+  <div class="actions">
+    <a [routerLink]="['/users', user().id]">View</a>
+    <a [routerLink]="['/users', user().id, 'edit']">Edit</a>
+    <button type="button" (click)="onDelete()">Delete</button>
+  </div>
+</article>

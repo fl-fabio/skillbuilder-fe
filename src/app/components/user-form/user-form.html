@@ -1,0 +1,49 @@
+<form class="form" [formGroup]="form" (ngSubmit)="submit()">
+  <div class="grid">
+    <label>
+      <span>Name *</span>
+      <input type="text" formControlName="name" />
+    </label>
+
+    <label>
+      <span>Username *</span>
+      <input type="text" formControlName="username" />
+    </label>
+
+    <label>
+      <span>Email *</span>
+      <input type="email" formControlName="email" />
+    </label>
+
+    <label>
+      <span>Phone</span>
+      <input type="text" formControlName="phone" />
+    </label>
+
+    <label>
+      <span>Website</span>
+      <input type="text" formControlName="website" />
+    </label>
+
+    <label>
+      <span>City</span>
+      <input type="text" formControlName="city" />
+    </label>
+
+    <label>
+      <span>Street</span>
+      <input type="text" formControlName="street" />
+    </label>
+
+    <label>
+      <span>Company</span>
+      <input type="text" formControlName="companyName" />
+    </label>
+  </div>
+
+  <div class="footer">
+    <button type="submit" [disabled]="loading()">
+      {{ loading() ? 'Saving...' : submitLabel() }}
+    </button>
+  </div>
+</form>

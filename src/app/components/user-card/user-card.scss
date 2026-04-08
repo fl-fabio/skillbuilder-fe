@@ -1,0 +1,84 @@
+.card {
+  display: grid;
+  gap: 18px;
+  padding: 20px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+
+  h3 {
+    margin: 0;
+    font-size: 1.08rem;
+  }
+
+  p {
+    margin: 6px 0 0;
+    color: #64748b;
+  }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #ede9fe;
+  color: #6d28d9;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.meta {
+  display: grid;
+  gap: 8px;
+  color: #475569;
+  font-size: 0.95rem;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  a,
+  button {
+    min-height: 40px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    font: inherit;
+  }
+
+  a:first-child {
+    background: #0f172a;
+    color: white;
+  }
+
+  a:nth-child(2) {
+    background: #e0e7ff;
+    color: #3730a3;
+  }
+
+  button {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+}
