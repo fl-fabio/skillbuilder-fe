@@ -1,0 +1,30 @@
+<section class="hero">
+  <div>
+    <span class="eyebrow">Minimal demo</span>
+    <h2>User listing</h2>
+    <p>Lista utenti, dettaglio, modifica ed eliminazione in un progetto semplice e ordinato.</p>
+  </div>
+
+  <label class="search">
+    <input
+      type="text"
+      placeholder="Search by name, email, city..."
+      [value]="query()"
+      (input)="onSearch(($any($event.target)).value)"
+    />
+  </label>
+</section>
+
+@if (isLoading()) {
+  <div class="state-card">Loading users...</div>
+} @else if (error()) {
+  <div class="state-card error">{{ error() }}</div>
+} @else if (filteredUsers().length === 0) {
+  <div class="state-card">No users found.</div>
+} @else {
+  <section class="grid">
+    @for (user of filteredUsers(); track user.id) {
+      <app-user-card [user]="user" (deleteRequested)="onDelete($event)" />
+    }
+  </section>
+}

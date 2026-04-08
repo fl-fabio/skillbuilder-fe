@@ -1,0 +1,74 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(99, 102, 241, 0.14), transparent 28%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  color: #0f172a;
+}
+
+.shell {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 18px 20px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: inherit;
+
+  h1 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+
+  p {
+    margin: 4px 0 0;
+    color: #64748b;
+    font-size: 0.92rem;
+  }
+}
+
+.brand-badge {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: white;
+  font-weight: 700;
+}
+
+.nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #334155;
+  transition: 0.2s ease;
+}
+
+.nav a:hover,
+.nav a.active {
+  background: #0f172a;
+  color: white;
+}

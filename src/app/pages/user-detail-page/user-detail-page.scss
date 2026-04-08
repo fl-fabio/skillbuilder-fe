@@ -1,0 +1,88 @@
+.detail-shell {
+  display: grid;
+}
+
+.detail-card {
+  display: grid;
+  gap: 24px;
+  padding: 28px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+
+  h2 {
+    margin: 8px 0 8px;
+    font-size: 2rem;
+  }
+
+  p {
+    margin: 0;
+    color: #64748b;
+  }
+}
+
+.eyebrow {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #e0e7ff;
+  color: #4338ca;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+
+  a {
+    min-height: 42px;
+    padding: 0 14px;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    background: #0f172a;
+    color: white;
+  }
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+
+  div {
+    display: grid;
+    gap: 6px;
+    padding: 16px;
+    border-radius: 18px;
+    background: #f8fafc;
+  }
+
+  strong {
+    color: #0f172a;
+  }
+
+  span {
+    color: #475569;
+  }
+}
+
+.state-card {
+  padding: 22px;
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+}
+
+.state-card.error {
+  color: #b91c1c;
+}

@@ -1,0 +1,31 @@
+@if (isLoading()) {
+  <div class="state-card">Loading user...</div>
+} @else if (error()) {
+  <div class="state-card error">{{ error() }}</div>
+} @else if (user(); as currentUser) {
+  <section class="detail-shell">
+    <div class="detail-card">
+      <div class="header">
+        <div>
+          <span class="eyebrow">User detail</span>
+          <h2>{{ currentUser.name }}</h2>
+          <p>{{ currentUser.email }}</p>
+        </div>
+
+        <div class="actions">
+          <a routerLink="/users">Back</a>
+          <a [routerLink]="['/users', currentUser.id, 'edit']">Edit</a>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div><strong>Username</strong><span>{{ currentUser.username }}</span></div>
+        <div><strong>Phone</strong><span>{{ currentUser.phone }}</span></div>
+        <div><strong>Website</strong><span>{{ currentUser.website }}</span></div>
+        <div><strong>City</strong><span>{{ currentUser.address.city }}</span></div>
+        <div><strong>Street</strong><span>{{ currentUser.address.street }}</span></div>
+        <div><strong>Company</strong><span>{{ currentUser.company.name }}</span></div>
+      </div>
+    </div>
+  </section>
+}

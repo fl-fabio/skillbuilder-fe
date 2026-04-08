@@ -1,0 +1,23 @@
+     @if (isLoading()) {
+  <div class="state-card">Loading user...</div>
+} @else if (error() && !user()) {
+  <div class="state-card error">{{ error() }}</div>
+} @else if (user(); as currentUser) {
+  <section class="edit-shell">
+    <div class="header">
+      <div>
+        <span class="eyebrow">Edit user</span>
+        <h2>{{ currentUser.name }}</h2>
+      </div>
+
+      <a class="back-link" [routerLink]="['/users', currentUser.id]">Back to detail</a>
+    </div>
+
+    <app-user-form
+      [initialUser]="currentUser"
+      [loading]="isSaving()"
+      submitLabel="Save changes"
+      (formSubmitted)="onSubmit($event)"
+    />
+  </section>
+}
