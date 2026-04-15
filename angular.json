@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "users-crud": {
+    "skillbuilder-fe": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
