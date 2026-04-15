@@ -84,10 +84,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "users-crud:build:production"
+              "buildTarget": "skillbuilder-fe:build:production"
             },
             "development": {
-              "buildTarget": "users-crud:build:development"
+              "buildTarget": "skillbuilder-fe:build:development"
             }
           },
           "defaultConfiguration": "development"
