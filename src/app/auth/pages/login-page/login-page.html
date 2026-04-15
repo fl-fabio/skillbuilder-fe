@@ -1,0 +1,90 @@
+<main class="auth-screen">
+  <section class="auth-shell">
+    <div class="hero-panel">
+      <div class="hero-copy">
+        <span class="hero-kicker">SkillBridge</span>
+        <h1>
+          Costruisci la carriera nell’
+          <span>architettura</span>
+          che desideri.
+        </h1>
+        <p>
+          Accedi alla piattaforma per valorizzare competenze, colmare i gap professionali
+          e orientare il tuo percorso con strumenti pensati per il mondo dell’architettura.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-panel">
+      <div class="brand-block">
+        <h2>SkillBridge</h2>
+        <p>PROFESSIONAL GAP ARCHITECTURE</p>
+      </div>
+
+      <div class="auth-tabs" aria-label="Authentication navigation">
+        <a class="auth-tab active" routerLink="/login" aria-current="page">Login</a>
+        <a class="auth-tab" routerLink="/register">Sign Up</a>
+      </div>
+
+      <form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="field-group">
+          <label class="field-label" for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="name@example.com"
+            autocomplete="email"
+            [disabled]="isSubmitting()"
+          />
+          @if (emailControl.touched && emailControl.hasError('required')) {
+            <p class="field-error">Inserisci la tua email.</p>
+          }
+          @if (emailControl.touched && emailControl.hasError('email')) {
+            <p class="field-error">Inserisci un indirizzo email valido.</p>
+          }
+        </div>
+
+        <div class="field-group">
+          <div class="field-header">
+            <label class="field-label" for="password">Password</label>
+            <button class="forgot-link" type="button">Password dimenticata?</button>
+          </div>
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            placeholder="Inserisci la password"
+            autocomplete="current-password"
+            [disabled]="isSubmitting()"
+          />
+          @if (passwordControl.touched && passwordControl.hasError('required')) {
+            <p class="field-error">Inserisci la tua password.</p>
+          }
+        </div>
+
+        @if (errorMessage()) {
+          <div class="submit-error" role="alert">
+            {{ errorMessage() }}
+          </div>
+        }
+
+        <button class="submit-button" type="submit" [disabled]="form.invalid || isSubmitting()">
+          @if (isSubmitting()) {
+            <span class="spinner" aria-hidden="true"></span>
+            <span>Accesso in corso...</span>
+          } @else {
+            <span>Accedi a SkillBridge</span>
+          }
+        </button>
+      </form>
+
+      <footer class="auth-footer">
+        <span>Serve aiuto?</span>
+        <a class="footer-link" href="">Supporto</a>
+        <a class="footer-link" href="">Privacy</a>
+        <a class="footer-link" href="">Termini</a>
+      </footer>
+    </div>
+  </section>
+</main>
