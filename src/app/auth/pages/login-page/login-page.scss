@@ -1,0 +1,370 @@
+:host {
+  display: block;
+}
+
+.auth-screen {
+  min-height: 100vh;
+  display: block;
+}
+
+.auth-shell {
+  width: 100%;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.hero-panel {
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  padding: clamp(48px, 6vw, 88px);
+  background: linear-gradient(180deg, #d9ecff 0%, #c7e1ff 100%);
+}
+
+.hero-copy {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.hero-kicker {
+  display: inline-flex;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  color: #2563eb;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.hero-copy h1 {
+  margin: 22px 0 18px;
+  font-size: clamp(2.2rem, 3vw, 3.35rem);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+}
+
+.hero-copy span {
+  color: #2563eb;
+}
+
+.hero-copy p {
+  margin: 0;
+  max-width: 42ch;
+  color: #516074;
+  font-size: 1rem;
+  line-height: 1.68;
+}
+
+.form-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  padding: clamp(48px, 5.5vw, 84px);
+  background: #ffffff;
+}
+
+.brand-block,
+.auth-tabs,
+.login-form,
+.auth-footer {
+  width: min(100%, 430px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.brand-block h2 {
+  margin: 0;
+  color: #2563eb;
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.brand-block p {
+  margin: 10px 0 0;
+  color: #64748b;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.auth-tabs {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 34px;
+  margin-bottom: 30px;
+  padding: 6px;
+  border-radius: 999px;
+  background: #eff3fb;
+}
+
+.auth-tab {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+  color: #64748b;
+  text-decoration: none;
+  font-weight: 700;
+  transition: 0.2s ease;
+}
+
+.auth-tab.active {
+  background: white;
+  color: #0f172a;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+}
+
+.login-form {
+  display: grid;
+  gap: 24px;
+}
+
+.field-group {
+  display: grid;
+  gap: 12px;
+}
+
+.checkbox-group {
+  display: grid;
+  gap: 10px;
+}
+
+.field-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.field-label {
+  color: #0f172a;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+input {
+  width: 100%;
+  min-height: 58px;
+  padding: 0 18px;
+  border: 1px solid #d8e2f0;
+  border-radius: 18px;
+  background: #f8fbff;
+  color: #0f172a;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+input::placeholder {
+  color: #94a3b8;
+}
+
+input:focus {
+  outline: none;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14);
+  background: white;
+}
+
+input:disabled {
+  cursor: wait;
+  opacity: 0.78;
+}
+
+.checkbox-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: #334155;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.checkbox-field input {
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  min-height: 18px;
+  margin-top: 2px;
+  padding: 0;
+  border-radius: 6px;
+  accent-color: #2563eb;
+  box-shadow: none;
+}
+
+.forgot-link,
+.footer-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #2563eb;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.forgot-link:hover,
+.footer-link:hover {
+  color: #1d4ed8;
+}
+
+.field-error {
+  margin: 0;
+  color: #dc2626;
+  font-size: 0.88rem;
+}
+
+.submit-error {
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #fff1f2;
+  color: #be123c;
+  font-size: 0.94rem;
+}
+
+.submit-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 60px;
+  margin-top: 14px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #4f8df8 100%);
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 14px 28px rgba(37, 99, 235, 0.18);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(37, 99, 235, 0.24);
+}
+
+.submit-button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+  transform: none;
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.16);
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.42);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.auth-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+  margin-top: 34px;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 1080px) {
+  .auth-shell {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(2rem, 3.4vw, 3rem);
+  }
+
+  .hero-panel,
+  .form-panel {
+    padding: 40px;
+  }
+}
+
+@media (max-width: 860px) {
+  .auth-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-panel {
+    min-height: auto;
+    padding: 48px 24px 36px;
+  }
+
+  .hero-copy {
+    max-width: 100%;
+  }
+
+  .form-panel {
+    min-height: auto;
+    padding: 36px 24px 40px;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero-panel,
+  .form-panel {
+    padding: 24px 20px;
+  }
+
+  .brand-block,
+  .auth-tabs,
+  .login-form,
+  .auth-footer {
+    width: 100%;
+  }
+
+  .auth-tabs {
+    width: 100%;
+    margin: 24px 0 22px;
+  }
+
+  .field-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .checkbox-field {
+    gap: 10px;
+    font-size: 0.92rem;
+  }
+
+  .hero-copy h1 {
+    font-size: 2rem;
+  }
+
+  .hero-copy p {
+    font-size: 0.96rem;
+  }
+
+  .login-form {
+    gap: 22px;
+  }
+
+  .submit-button {
+    margin-top: 12px;
+  }
+
+  .auth-footer {
+    margin-top: 28px;
+    gap: 8px 14px;
+  }
+}

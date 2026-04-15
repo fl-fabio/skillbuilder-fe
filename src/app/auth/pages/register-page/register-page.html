@@ -1,0 +1,132 @@
+<main class="auth-screen">
+  <section class="auth-shell">
+    <div class="hero-panel">
+      <div class="hero-copy">
+        <span class="hero-kicker">SkillBridge</span>
+        <h1>
+          Costruisci la carriera nell’
+          <span>architettura</span>
+          che desideri.
+        </h1>
+        <p>
+          Avanza dalle competenze di oggi alle opportunità di domani con una guida chiara,
+          accogliente e fondata su dati reali.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-panel">
+      <div class="brand-block">
+        <h2>SkillBridge</h2>
+        <p>PROFESSIONAL GAP ARCHITECTURE</p>
+      </div>
+
+      <div class="auth-tabs" aria-label="Authentication navigation">
+        <a class="auth-tab" routerLink="/login">Login</a>
+        <a class="auth-tab active" routerLink="/register" aria-current="page">Sign Up</a>
+      </div>
+
+      <form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="field-group">
+          <label class="field-label" for="name">Nome</label>
+          <input
+            id="name"
+            type="text"
+            formControlName="name"
+            placeholder="Inserisci il nome"
+            autocomplete="given-name"
+            [disabled]="isSubmitting()"
+          />
+          @if (nameControl.touched && nameControl.hasError('required')) {
+            <p class="field-error">Inserisci il nome.</p>
+          }
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="surname">Cognome</label>
+          <input
+            id="surname"
+            type="text"
+            formControlName="surname"
+            placeholder="Inserisci il cognome"
+            autocomplete="family-name"
+            [disabled]="isSubmitting()"
+          />
+          @if (surnameControl.touched && surnameControl.hasError('required')) {
+            <p class="field-error">Inserisci il cognome.</p>
+          }
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="nome@azienda.it"
+            autocomplete="email"
+            [disabled]="isSubmitting()"
+          />
+          @if (emailControl.touched && emailControl.hasError('required')) {
+            <p class="field-error">Inserisci la tua email.</p>
+          }
+          @if (emailControl.touched && emailControl.hasError('email')) {
+            <p class="field-error">Inserisci un indirizzo email valido.</p>
+          }
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            placeholder="Inserisci la password"
+            autocomplete="new-password"
+            [disabled]="isSubmitting()"
+          />
+          @if (passwordControl.touched && passwordControl.hasError('required')) {
+            <p class="field-error">Inserisci la tua password.</p>
+          }
+        </div>
+
+        <div class="checkbox-group">
+          <label class="checkbox-field" for="privacyAccepted">
+            <input
+              id="privacyAccepted"
+              type="checkbox"
+              formControlName="privacyAccepted"
+              [disabled]="isSubmitting()"
+            />
+            <span>Accetto i termini dell'informativa sulla Privacy</span>
+          </label>
+          @if (privacyAcceptedControl.touched && privacyAcceptedControl.hasError('required')) {
+            <p class="field-error">Devi accettare l'informativa sulla Privacy.</p>
+          }
+        </div>
+
+        @if (errorMessage()) {
+          <div class="submit-error" role="alert">
+            {{ errorMessage() }}
+          </div>
+        }
+
+        <button class="submit-button" type="submit" [disabled]="form.invalid || isSubmitting()">
+          @if (isSubmitting()) {
+            <span class="spinner" aria-hidden="true"></span>
+            <span>Registrazione in corso...</span>
+          } @else {
+            <span>Continua</span>
+          }
+        </button>
+      </form>
+
+      <footer class="auth-footer">
+        <span>Serve aiuto?</span>
+        <a class="footer-link" href="">Supporto</a>
+        <a class="footer-link" href="">Privacy</a>
+        <a class="footer-link" href="">Termini</a>
+      </footer>
+    </div>
+  </section>
+</main>
