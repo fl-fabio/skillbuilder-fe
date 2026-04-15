@@ -1,0 +1,308 @@
+// Variabili Esatte
+$bg-color: #E9F8FF;
+$text-main: #2D3748;
+$text-blue: #476083; // Colore base per "Benvenuto!"
+$text-secondary: #718096;
+$card-bg: #FFFFFF;
+$border-color: #CBD5E1; // Grigio per il bordo delle card non selezionate
+$border-radius: 12px;
+$content-width: 948px;
+
+.onboarding-container {
+  min-height: 100vh;
+  background-color: $bg-color;
+  padding-top: 120px; // Abbassato per centrare meglio verticalmente
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+// Wrapper Centrale (Garantisce che tutto sia incolonnato perfettamente a sinistra)
+.content-wrapper {
+  width: 100%;
+  max-width: $content-width;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-grow: 1;
+}
+
+// Header
+.header-section {
+  width: 100%;
+  margin-bottom: 40px;
+
+  .pre-title {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 32px;
+    font-weight: 500;
+    color: $text-blue;
+    margin: 0 0 4px 0;
+  }
+
+  .main-title {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 700;
+    font-size: 60px;
+    line-height: 60px;
+    letter-spacing: -1.5px;
+    margin: 0 0 24px 0;
+    white-space: nowrap; 
+    
+    background: linear-gradient(to right, #1262A4, #50B0FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: $text-main;
+    line-height: 1.6;
+    margin: 0;
+    font-weight: 400;
+  }
+}
+
+// Griglia Card
+.cards-section {
+  width: 100%;
+  margin-bottom: 80px;
+}
+
+.cards-grid {
+  display: grid;
+  // Usiamo grid template asimmetrico: 40% e 60% per la prima riga
+  grid-template-columns: repeat(10, 1fr); 
+  gap: 20px; // Esattamente 20px di spazio tra le card
+
+  .area-card {
+    background: $card-bg;
+    // Imposta il bordo normale
+    border: 3px solid transparent; // Mettiamo 3px trasparenti per non far "saltare" la card al click
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04), inset 0 0 0 1px $border-color; // Simuliamo il bordo non selezionato da 1px con inset
+    border-radius: 15px; // Aggiornato a 15px come da Figma
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    position: relative; // Necessario per il trucco del prima/dopo
+    
+    // Gestione larghezze griglia...
+    &:nth-child(1) { grid-column: span 4; }
+    &:nth-child(2) { grid-column: span 6; }
+    &:nth-child(3) { grid-column: 1 / 4; } 
+    &:nth-child(4) { grid-column: 4 / 8; } 
+    &:nth-child(5) { grid-column: 8 / 11; } 
+
+    &:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), inset 0 0 0 1px $border-color;
+      transform: translateY(-2px);
+    }
+
+    // STATO SELEZIONATO CON GRADIENTE SUI BORDI ARROTONDATI
+    &.selected {
+      border: 3px solid transparent; // Crea lo spazio fisico per il bordo
+      padding: 24px;
+      
+      // L'inner shadow
+      box-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.25);
+
+      // Usiamo pseudo-elemento per dipingere SOLO il bordo
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        border-radius: 15px; // Stesso raggio della card
+        padding: 3px; // Esattamente uguale allo spessore del bordo desiderato
+        background: linear-gradient(to bottom, #1262A4, #50B0FF); // Il tuo gradiente
+        
+        // Questa maschera taglia via il centro e lascia visibile SOLO il "padding" (il bordo)
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask-composite: exclude;
+        
+        pointer-events: none; // Assicura che la maschera non blocchi i click
+      }
+    }
+
+
+    // ... resto del codice (icon-box, area-title, ecc.)
+
+    .icon-box {
+      width: 32px;
+      height: 32px;
+      background-color: #F1F5F9;
+      border-radius: 8px;
+      margin-bottom: 24px; // Spazio corretto prima del titolo
+    }
+
+    .area-title {
+      font-family: 'Nunito Sans', sans-serif;
+      font-size: 17px; // Ridimensionato
+      font-weight: 700;
+      color: $text-main;
+      margin: 0 0 8px 0; // Spazio ridotto verso la descrizione
+    }
+
+    .area-desc {
+      font-size: 13px;
+      color: $text-secondary;
+      line-height: 1.5;
+      margin: 0;
+    }
+  }
+}
+
+// Footer
+.onboarding-container {
+  min-height: 100vh;
+  background-color: $bg-color;
+  // Aggiunto padding laterale di 64px (si ridurrà su mobile tramite media query se necessario)
+  padding: 120px 64px 0 64px; 
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+// ... lascia invariato .content-wrapper, .header-section e .cards-section ...
+
+// Per il footer, assicurati che abbia lo stesso padding laterale se non è dentro al wrapper
+.bottom-footer {
+  width: 100%;
+  border-top: 1px solid #D2E8F4;
+  // Padding superiore/inferiore 32px, laterale 64px per allinearsi al contenitore
+  padding: 32px 64px; 
+  background-color: transparent;
+  margin-top: auto;
+  
+  // ... resto del footer ...
+}
+
+  .footer-content {
+    width: 100%;
+    max-width: $content-width;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: $text-secondary;
+
+    .logo {
+      font-family: 'Nunito Sans', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      
+      // Aggiungi il gradiente qui
+      background: linear-gradient(to right, #1262A4, #50B0FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent; // Fallback per rendere visibile il gradiente
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 32px;
+
+      a {
+        color: $text-secondary;
+        text-decoration: none;
+        transition: color 0.2s;
+
+        &:hover {
+          color: $text-main;
+        }
+      }
+    }
+  }
+// ==========================================
+// MEDIA QUERIES PER IL RESPONSIVE DESIGN
+// ==========================================
+
+// Tablet (fino a 1024px)
+@media (max-width: 1024px) {
+  .onboarding-container {
+    padding: 80px 40px 0 40px; // Riduciamo lo spazio sopra e ai lati
+  }
+
+  .bottom-footer {
+    padding: 32px 40px;
+  }
+}
+
+// Smartphone Grandi / Tablet Verticali (fino a 768px)
+@media (max-width: 768px) {
+  .header-section {
+    .main-title {
+      font-size: 40px; // Titolo più piccolo
+      line-height: 44px;
+      white-space: normal; // Permettiamo al titolo di andare a capo
+    }
+    
+    .pre-title {
+      font-size: 24px;
+    }
+  }
+
+  .cards-grid {
+    // Rompiamo la griglia asimmetrica: ora ogni card prende metà spazio (2 colonne)
+    grid-template-columns: repeat(2, 1fr);
+    
+    .area-card {
+      // Sovrascriviamo le regole di span precedenti per farle tutte uguali
+      &:nth-child(1), &:nth-child(2), &:nth-child(3), &:nth-child(4), &:nth-child(5) {
+        grid-column: span 1;
+      }
+    }
+  }
+}
+
+// Smartphone Piccoli (fino a 480px)
+@media (max-width: 480px) {
+  .onboarding-container {
+    padding: 40px 20px 0 20px; // Padding minimi ai lati
+  }
+
+  .header-section {
+    margin-bottom: 32px;
+
+    .main-title {
+      font-size: 32px; // Titolo ancora più piccolo
+      line-height: 36px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+    }
+  }
+
+  .cards-grid {
+    // Su schermi molto piccoli, tutte le card vanno su un'unica colonna
+    grid-template-columns: 1fr;
+    gap: 16px; // Spazio ridotto tra le card
+    
+    .area-card {
+      padding: 20px 16px;
+    }
+  }
+
+  .bottom-footer {
+    padding: 24px 20px;
+    
+    .footer-content {
+      flex-direction: column; // Incolonniamo il logo, i link e il copyright
+      gap: 16px;
+      text-align: center;
+
+      .footer-links {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+  }
+}
