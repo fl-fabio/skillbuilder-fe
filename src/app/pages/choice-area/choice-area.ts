@@ -34,19 +34,24 @@ export class ChoiceAreaPage implements OnInit {
     }
   }
 
+  // Questa funzione ora seleziona solo la card senza navigare
   selectArea(id: string): void {
-  this.selectedAreaId.set(id);
+    this.selectedAreaId.set(id);
     this.selectionService.setSelectedAreaId(id);
-    this.router.navigate(['/job-title']);
+  }
+
+  // Nuova funzione associata al click del bottone "Avanti"
+  goNext(): void {
+    if (this.selectedAreaId()) {
+      this.router.navigate(['/job-title']);
+    }
   }
 
   getIconForArea(areaName: string): string {
-    if (!areaName) return ''; // Fallback se il nome è undefined o vuoto
+    if (!areaName) return ''; 
     
-    // Normalizziamo il testo per evitare problemi di maiuscole/minuscole
     const name = areaName.toLowerCase();
 
-    // Logica più flessibile: basta che contenga una parola chiave
     if (name.includes('sviluppo') || name.includes('software')) {
       return 'icons/Sviluppo_soft.png';
     }
@@ -63,8 +68,7 @@ export class ChoiceAreaPage implements OnInit {
       return 'icons/Data_AI.png';
     }
 
-    // Se nessuna condizione viene soddisfatta, mostra un'icona di default
-    // (Nel tuo caso metto Design.png come default per evitare riquadri vuoti)
     return 'icons/Design.png'; 
   }
 }
+

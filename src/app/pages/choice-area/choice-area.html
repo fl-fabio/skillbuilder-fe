@@ -28,6 +28,17 @@
         </div>
       }
     </div>
+
+    <!-- BOTTONE AVANTI AGGIUNTO QUI -->
+    <div class="action-section">
+      <button 
+        class="primary-btn" 
+        [disabled]="!selectedAreaId()"
+        (click)="goNext()"
+      >
+        Avanti
+      </button>
+    </div>
   </main>
 
   <footer class="bottom-footer">
@@ -45,3 +56,4 @@
   </footer>
 
 </div>
+
