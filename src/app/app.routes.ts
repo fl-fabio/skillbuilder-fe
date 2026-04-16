@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { guestGuard } from './core/guards/guest.guard';
-import { LoginPage } from './auth/pages/login-page/login-page';
-import { RegisterPage } from './auth/pages/register-page/register-page';
 import { ErrorPage } from './pages/error-page/error-page';
+import { LoginPage } from './pages/login-page/login-page';
+import { RegisterPage } from './pages/register-page/register-page';
 
 export const routes: Routes = [
   {

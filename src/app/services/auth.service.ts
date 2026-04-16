@@ -20,7 +20,7 @@ export class AuthService {
 
   login(payload: LoginRequest): Observable<LoginResponse> {
     return this.http
-      .post<LoginResponse>(this.buildUrl('/auth/login'), payload, {
+      .post<LoginResponse>(this.buildUrl('/api/auth/login'), payload, {
         headers: this.jsonHeaders
       })
       .pipe(timeout(10000));
@@ -28,7 +28,7 @@ export class AuthService {
 
   register(payload: RegisterRequest): Observable<RegisterResponse> {
     return this.http
-      .post<RegisterResponse>(this.buildUrl('/auth/register'), payload, {
+      .post<RegisterResponse>(this.buildUrl('/api/auth/register'), payload, {
         headers: this.jsonHeaders
       })
       .pipe(timeout(10000));

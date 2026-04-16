@@ -3,9 +3,9 @@ import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom, TimeoutError } from 'rxjs';
-import { AuthStorageService } from '../../../core/services/auth-storage.service';
-import { LoginRequest } from '../../models/auth.models';
 import { AuthService } from '../../services/auth.service';
+import { AuthStorageService } from '../../core/services/auth-storage.service';
+import { LoginRequest } from '../../models/auth.models';
 
 type LoginForm = FormGroup<{
   email: FormControl<string>;

@@ -3,8 +3,8 @@ import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom, TimeoutError } from 'rxjs';
-import { RegisterRequest } from '../../models/auth.models';
 import { AuthService } from '../../services/auth.service';
+import { RegisterRequest } from '../../models/auth.models';
 
 type RegisterForm = FormGroup<{
   name: FormControl<string>;
