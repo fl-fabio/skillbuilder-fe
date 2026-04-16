@@ -4,6 +4,8 @@ import { ErrorPage } from './pages/error-page/error-page';
 import { LoginPage } from './pages/login-page/login-page';
 import { RegisterPage } from './pages/register-page/register-page';
 import { ChoiceAreaPage } from './pages/choice-area/choice-area';
+import { JobTitlePage } from './pages/job-title-page/job-title-page';
+
 
 export const routes: Routes = [
   {
@@ -13,18 +15,20 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    canActivate: [guestGuard],
     component: LoginPage
   },
   {
     path: 'register',
-    canActivate: [guestGuard],
     component: RegisterPage
   },
     {
     path: 'choice-area',
     canActivate: [guestGuard],
     component: ChoiceAreaPage
+  },
+  {
+    path: 'job-title',
+    component: JobTitlePage
   },
   {
     path: 'users',

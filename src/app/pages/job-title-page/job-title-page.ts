@@ -1,0 +1,81 @@
+import { Component, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { CompetencyService } from '../../services/competency.service';
+import { SelectionService } from '../../services/selection.service';
+import { JobTitle } from '../../models/competency.model';
+
+@Component({
+  selector: 'app-job-title-page',
+  templateUrl: './job-title-page.html',
+  imports: [],
+  styleUrl: './job-title-page.scss',
+  standalone: true
+})
+export class JobTitlePage {
+  private readonly router = inject(Router);
+  private readonly competencyService = inject(CompetencyService);
+  private readonly selectionService = inject(SelectionService);
+
+  readonly jobTitles = signal<JobTitle[]>([]);
+  readonly selectedJobTitleId = signal<string | null>(null);
+
+  get isLoading() {
+    return this.competencyService.isLoading;
+  }
+
+  get error() {
+    return this.competencyService.error;
+  }
+
+  get areaId(): string | null {
+    return this.selectionService.selectedAreaId();
+  }
+
+  async ngOnInit(): Promise<void> {
+    const areaId = this.areaId;
+
+    if (!areaId) {
+      await this.router.navigate(['/choice-area']);
+      return;
+    }
+
+    try {
+      const jobTitles = await this.competencyService.getJobTitlesByArea(areaId);
+      this.jobTitles.set(
+        jobTitles.map((jobTitle) => ({
+          ...jobTitle,
+          name:
+            jobTitle.name ??
+            (jobTitle as any).title ??
+            (jobTitle as any).job_title ??
+            ''
+        }))
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  selectJobTitle(jobTitle: JobTitle): void {
+    this.selectedJobTitleId.set(jobTitle.id);
+    this.competencyService.selectJobTitle(jobTitle.id);
+    this.selectionService.setSelectedJobId(jobTitle.id);
+  }
+
+  proceedToSkillsEvaluation(): void {
+    if (!this.selectedJobTitleId() || !this.areaId) {
+      return;
+    }
+
+    this.router.navigate(['/skills-evaluation'], {
+      queryParams: {
+        areaId: this.areaId,
+        jobTitleId: this.selectedJobTitleId()
+      }
+    });
+  }
+
+  goBack(): void {
+    this.router.navigate(['/choice-area']);
+  }
+}
