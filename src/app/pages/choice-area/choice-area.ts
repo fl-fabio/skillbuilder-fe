@@ -1,5 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { AreaService } from '../../services/choice-area.service';
+import { SelectionService } from '../../services/selection.service';
 
 export interface Area {
   id: string;
@@ -15,9 +17,12 @@ export interface Area {
   standalone: true
 })
 export class ChoiceAreaPage implements OnInit {
+  private readonly router = inject(Router);
+  private readonly selectionService = inject(SelectionService);
+  private readonly areaService = inject(AreaService);
 
-  areaService = inject(AreaService);
   areas = signal<Area[]>([]);
+  readonly selectedAreaId = signal<string | null>(null);
 
   async ngOnInit() {
     try {
@@ -28,13 +33,9 @@ export class ChoiceAreaPage implements OnInit {
     }
   }
 
-  readonly selectedAreaId = signal<string | null>(null);
-
   selectArea(id: string): void {
-    if (this.selectedAreaId() === id) {
-      this.selectedAreaId.set(null);
-    } else {
-      this.selectedAreaId.set(id);
-    }
+    this.selectedAreaId.set(id);
+    this.selectionService.setSelectedAreaId(id);
+    this.router.navigate(['/job-title']);
   }
 }

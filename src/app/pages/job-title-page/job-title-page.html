@@ -19,6 +19,7 @@
 } @else {
   <section class="job-titles-container">
     <div class="job-titles-grid">
+<!--       <pre>{{ jobTitles() | json }}</pre> -->
       @for (jobTitle of jobTitles(); track jobTitle.id) {
         <div class="job-title-card" 
              [class.selected]="selectedJobTitleId() === jobTitle.id"

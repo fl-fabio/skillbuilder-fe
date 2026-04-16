@@ -27,7 +27,7 @@ export const routes: Routes = [
     component: ChoiceAreaPage
   },
   {
-    path: 'job-title/:areaId',
+    path: 'job-title',
     component: JobTitlePage
   },
   {
