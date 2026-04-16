@@ -1,7 +1,7 @@
 services:
   frontend:
     build: .
-    container_name: skillbridge-fe
+    container_name: skillbridge_frontend
     restart: always
     ports:
       - "8080:80"
