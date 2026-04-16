@@ -15,12 +15,10 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    canActivate: [guestGuard],
     component: LoginPage
   },
   {
     path: 'register',
-    canActivate: [guestGuard],
     component: RegisterPage
   },
     {
