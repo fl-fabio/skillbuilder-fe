@@ -2,7 +2,7 @@
   
   <header class="header-section">
     <h2 class="pre-title">Benvenuto!</h2>
-<h1 class="main-title">Facciamo il primo passo insieme.</h1>
+    <h1 class="main-title">Facciamo il primo passo insieme.</h1>
 
     <p class="subtitle">
       Seleziona l'area che ti rappresenta di più: creeremo un percorso formativo<br>
@@ -18,8 +18,10 @@
           [class.selected]="selectedAreaId() === area.id"
           (click)="selectArea(area.id)"
         >
-          <!-- Placeholder per l'icona -->
-          <div class="icon-box"></div>
+          <!-- Icona dinamica in base al nome dell'area -->
+          <div class="icon-box">
+            <img [src]="getIconForArea(area.area)" [alt]="'Icona ' + area.area" class="card-icon">
+          </div>
           
           <h3 class="area-title">{{ area.area }}</h3>
           <p class="area-desc">{{ area.description }}</p>
@@ -37,7 +39,7 @@
         <a href="#">Help Center</a>
       </div>
       <div class="copyright">
-        © 2024 SkillBridge. The Architectural Bridge to your Career
+        © 2026 SkillBridge. The Architectural Bridge to your Career
       </div>
     </div>
   </footer>

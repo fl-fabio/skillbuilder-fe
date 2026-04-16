@@ -135,12 +135,25 @@ $content-width: 948px;
       }
     }
 
+    // GESTIONE ICONA AGGIORNATA
     .icon-box {
-      width: 32px;
-      height: 32px;
+      width: 48px;
+      height: 48px;
       background-color: #F1F5F9;
       border-radius: 8px;
       margin-bottom: 24px; 
+      
+      // Flexbox per centrare l'immagine al suo interno
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      // Stili specifici per l'immagine inserita nell'HTML
+      .card-icon {
+        width: 24px;
+        height: 24px;
+        object-fit: contain; // Mantiene le proporzioni originali senza deformazioni
+      }
     }
 
     .area-title {
