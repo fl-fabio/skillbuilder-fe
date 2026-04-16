@@ -13,14 +13,15 @@ import {
 })
 export class AuthService {
   private readonly http = inject(HttpClient);
-  private readonly apiBaseUrl = '';
+  private readonly apiBaseUrl = 'http://82.165.174.28/api';
   private readonly jsonHeaders = new HttpHeaders({
     'Content-Type': 'application/json'
   });
 
+
   login(payload: LoginRequest): Observable<LoginResponse> {
     return this.http
-      .post<LoginResponse>(this.buildUrl('/api/auth/login'), payload, {
+      .post<LoginResponse>(this.apiBaseUrl + '/auth/login', payload, {
         headers: this.jsonHeaders
       })
       .pipe(timeout(10000));
@@ -28,15 +29,15 @@ export class AuthService {
 
   register(payload: RegisterRequest): Observable<RegisterResponse> {
     return this.http
-      .post<RegisterResponse>(this.buildUrl('/api/auth/register'), payload, {
+      .post<RegisterResponse>(this.apiBaseUrl + '/auth/register', payload, {
         headers: this.jsonHeaders
       })
       .pipe(timeout(10000));
   }
 
-  private buildUrl(path: string): string {
+/*   private buildUrl(path: string): string {
     const normalizedBaseUrl = this.apiBaseUrl.replace(/\/$/, '');
 
     return normalizedBaseUrl ? `${normalizedBaseUrl}${path}` : path;
-  }
+  } */
 }

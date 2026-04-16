@@ -2,11 +2,9 @@ import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CompetencyService } from '../../services/competency.service';
 import { JobTitle } from '../../models/competency.model';
-import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-job-title-page',
-  imports: [NgIf, NgForOf],
   templateUrl: './job-title-page.html',
   styleUrl: './job-title-page.scss',
   standalone: true
