@@ -1,0 +1,45 @@
+<div class="onboarding-container">
+  
+  <header class="header-section">
+    <h2 class="pre-title">Benvenuto!</h2>
+<h1 class="main-title">Facciamo il primo passo insieme.</h1>
+
+    <p class="subtitle">
+      Seleziona l'area che ti rappresenta di più: creeremo un percorso formativo<br>
+      pensato per accompagnarti verso i tuoi obiettivi.
+    </p>
+  </header>
+
+  <main class="cards-section">
+    <div class="cards-grid">
+      @for (area of areas(); track area.id) {
+        <div 
+          class="area-card" 
+          [class.selected]="selectedAreaId() === area.id"
+          (click)="selectArea(area.id)"
+        >
+          <!-- Placeholder per l'icona -->
+          <div class="icon-box"></div>
+          
+          <h3 class="area-title">{{ area.area }}</h3>
+          <p class="area-desc">{{ area.description }}</p>
+        </div>
+      }
+    </div>
+  </main>
+
+  <footer class="bottom-footer">
+    <div class="footer-content">
+      <div class="logo">SkillBridge</div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Help Center</a>
+      </div>
+      <div class="copyright">
+        © 2024 SkillBridge. The Architectural Bridge to your Career
+      </div>
+    </div>
+  </footer>
+
+</div>
