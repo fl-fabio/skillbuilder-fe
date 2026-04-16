@@ -15,20 +15,19 @@ export interface Area {
   standalone: true
 })
 export class ChoiceAreaPage implements OnInit {
+  private areaService = inject(AreaService);
 
-  areaService = inject(AreaService);
   areas = signal<Area[]>([]);
+  selectedAreaId = signal<string | null>(null);
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
     try {
-      const areas = await this.areaService.getAreas();
-      this.areas.set(areas);
+      const fetchedAreas = await this.areaService.getAreas();
+      this.areas.set(fetchedAreas);
     } catch (error) {
       console.error('Error fetching areas:', error);
     }
   }
-
-  readonly selectedAreaId = signal<string | null>(null);
 
   selectArea(id: string): void {
     if (this.selectedAreaId() === id) {
@@ -36,5 +35,33 @@ export class ChoiceAreaPage implements OnInit {
     } else {
       this.selectedAreaId.set(id);
     }
+  }
+
+  getIconForArea(areaName: string): string {
+    if (!areaName) return ''; // Fallback se il nome è undefined o vuoto
+    
+    // Normalizziamo il testo per evitare problemi di maiuscole/minuscole
+    const name = areaName.toLowerCase();
+
+    // Logica più flessibile: basta che contenga una parola chiave
+    if (name.includes('sviluppo') || name.includes('software')) {
+      return 'icons/Sviluppo_soft.png';
+    }
+    if (name.includes('cybersecurity')) {
+      return 'icons/Cybersecurity.png';
+    }
+    if (name.includes('design') || name.includes('ux')) {
+      return 'icons/Design.png';
+    }
+    if (name.includes('cloud') || name.includes('devops')) {
+      return 'icons/DevOps_Cloud.png';
+    }
+    if (name.includes('data') || name.includes('ai')) {
+      return 'icons/Data_AI.png';
+    }
+
+    // Se nessuna condizione viene soddisfatta, mostra un'icona di default
+    // (Nel tuo caso metto Design.png come default per evitare riquadri vuoti)
+    return 'icons/Design.png'; 
   }
 }
