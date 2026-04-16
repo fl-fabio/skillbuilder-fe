@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AreaService } from '../../services/choice-area.service';
 import { SelectionService } from '../../services/selection.service';
@@ -21,11 +21,23 @@ export class ChoiceAreaPage implements OnInit {
   private readonly selectionService = inject(SelectionService);
   private readonly areaService = inject(AreaService);
 
-  areas = signal<Area[]>([]);
-
+  readonly areas = signal<Area[]>([]);
   readonly selectedAreaId = signal<string | null>(null);
+  readonly selectedArea = computed(
+    () => this.areas().find((area) => area.id === this.selectedAreaId()) ?? null
+  );
+
+  get isLoading() {
+    return this.areaService.isLoading;
+  }
+
+  get error() {
+    return this.areaService.error;
+  }
 
   async ngOnInit(): Promise<void> {
+    this.selectedAreaId.set(this.selectionService.selectedAreaId());
+
     try {
       const fetchedAreas = await this.areaService.getAreas();
       this.areas.set(fetchedAreas);
@@ -47,10 +59,36 @@ export class ChoiceAreaPage implements OnInit {
     }
   }
 
+  getDisplayAreaName(areaName: string): string {
+    const normalizedName = areaName.trim().toLowerCase();
+
+    if (normalizedName.includes('sviluppo soft') || normalizedName.includes('sviluppo software')) {
+      return 'Sviluppo Software';
+    }
+
+    if (normalizedName.includes('cloud') || normalizedName.includes('devops')) {
+      return 'Cloud & DevOps';
+    }
+
+    if (normalizedName.includes('data') || normalizedName.includes('ai')) {
+      return 'Data AI';
+    }
+
+    if (normalizedName.includes('cyber')) {
+      return 'Cybersecurity';
+    }
+
+    if (normalizedName.includes('design') || normalizedName.includes('ux') || normalizedName.includes('ui')) {
+      return 'Design UX/UI';
+    }
+
+    return areaName;
+  }
+
   getIconForArea(areaName: string): string {
     if (!areaName) return ''; 
     
-    const name = areaName.toLowerCase();
+    const name = this.getDisplayAreaName(areaName).toLowerCase();
 
     if (name.includes('sviluppo') || name.includes('software')) {
       return 'icons/Sviluppo_soft.png';
@@ -71,4 +109,3 @@ export class ChoiceAreaPage implements OnInit {
     return 'icons/Design.png'; 
   }
 }
-

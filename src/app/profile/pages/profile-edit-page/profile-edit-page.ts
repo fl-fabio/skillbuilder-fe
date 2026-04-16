@@ -4,7 +4,6 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom, TimeoutError } from 'rxjs';
 import { AuthStorageService } from '../../../core/services/auth-storage.service';
-import { getUserIdFromToken } from '../../../core/utils/jwt.utils';
 import { UpdateUserRequest } from '../../models/profile.models';
 import { ProfileService } from '../../services/profile.service';
 
@@ -67,6 +66,7 @@ export class ProfileEditPage {
 
   async ngOnInit(): Promise<void> {
     const token = this.authStorage.getToken();
+    console.log('Profile token:', maskTokenForLog(token));
 
     if (!token) {
       await this.router.navigate(['/login']);
@@ -76,17 +76,19 @@ export class ProfileEditPage {
     this.token = token;
 
     try {
-      this.userId = getUserIdFromToken(token);
-    } catch {
-      this.authStorage.clearSession();
-      await this.router.navigate(['/login']);
-      return;
-    }
+      const profile = await this.profileService.getCurrentUser();
+      const resolvedUserId = profile.id ?? profile.user_id;
 
-    try {
-      const profile = await firstValueFrom(
-        this.profileService.getProfile(this.userId, token)
-      );
+      console.log('Matched user:', profile);
+
+      if (resolvedUserId === undefined || resolvedUserId === null || !String(resolvedUserId).trim()) {
+        this.errorMessage.set('Errore di autenticazione. Effettua nuovamente il login.');
+        this.isLoading.set(false);
+        return;
+      }
+
+      this.userId = String(resolvedUserId);
+      console.log('Extracted userId:', this.userId);
 
       this.form.reset({
         name: profile.name ?? '',
@@ -96,7 +98,11 @@ export class ProfileEditPage {
       this.form.enable();
       this.hasProfile.set(true);
     } catch (error) {
-      this.errorMessage.set(mapProfileError(error));
+      if (error instanceof Error && error.message === 'User not found') {
+        this.errorMessage.set('Profilo non trovato.');
+      } else {
+        this.errorMessage.set(mapProfileError(error));
+      }
     } finally {
       this.isLoading.set(false);
     }
@@ -188,22 +194,30 @@ export class ProfileEditPage {
 
 function mapProfileError(error: unknown): string {
   if (error instanceof TimeoutError) {
-    return 'Impossibile connettersi al server. Riprova più tardi.';
+    return 'Server lento o non raggiungibile';
   }
 
   if (error instanceof HttpErrorResponse) {
     if (error.status === 404) {
-      return 'Profilo non trovato.';
-    }
-
-    if (error.status === 422) {
-      return 'Controlla i dati inseriti.';
+      return 'Profilo non trovato';
     }
 
     if (error.status === 0) {
-      return 'Impossibile connettersi al server. Riprova più tardi.';
+      return 'Errore di connessione';
     }
   }
 
   return 'Si è verificato un errore. Riprova.';
+}
+
+function maskTokenForLog(token: string | null): string {
+  if (!token) {
+    return 'missing';
+  }
+
+  if (token.length <= 10) {
+    return '***';
+  }
+
+  return `${token.slice(0, 6)}...${token.slice(-4)}`;
 }
