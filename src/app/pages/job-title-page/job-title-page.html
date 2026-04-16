@@ -1,50 +1,60 @@
-<section class="hero">
-  <div>
-    <span class="eyebrow">Selezione Ruolo</span>
-    <h2>Scegli il tuo Job Title</h2>
-    <p>Seleziona il ruolo che meglio corrisponde alle tue competenze nell'area scelta.</p>
-  </div>
+<div class="onboarding-container">
+  
+  <header class="header-section">
+    <h2 class="pre-title">Selezione Ruolo</h2>
+    <h1 class="main-title">Scegli il tuo Job Title</h1>
+    <p class="subtitle">
+      Seleziona il ruolo che meglio corrisponde alle tue competenze nell'area scelta.
+    </p>
+  </header>
 
-  <button class="back-btn" (click)="goBack()" aria-label="Go back">
-    ← Indietro
-  </button>
-</section>
-
-@if (isLoading()) {
-  <div class="state-card">Caricamento job titles...</div>
-} @else if (error()) {
-  <div class="state-card error">{{ error() }}</div>
-} @else if (jobTitles().length === 0) {
-  <div class="state-card">Nessun job title disponibile per questa area.</div>
-} @else {
-  <section class="job-titles-container">
-    <div class="job-titles-grid">
-      @for (jobTitle of jobTitles(); track jobTitle.id) {
-        <div class="job-title-card" 
-             [class.selected]="selectedJobTitleId() === jobTitle.id"
-             (click)="selectJobTitle(jobTitle)">
-          <div class="card-content">
-            <h3>{{ jobTitle.name }}</h3>
-            @if (jobTitle.description) {
-              <p>{{ jobTitle.description }}</p>
+  @if (isLoading()) {
+    <div class="state-card">Caricamento job titles...</div>
+  } @else if (error()) {
+    <div class="state-card error">{{ error() }}</div>
+  } @else if (jobTitles().length === 0) {
+    <div class="state-card error">❌ Nessun job title. Area ID: {{ areaId() }}</div>
+  } @else {
+    <main class="cards-section">
+      <div class="cards-grid">
+        @for (jobTitle of jobTitles(); track jobTitle.id) {
+          <div 
+            class="job-card" 
+            [class.selected]="selectedJobTitleId() === jobTitle.id"
+            (click)="selectJobTitle(jobTitle)"
+          >
+            <h3 class="job-title">{{ jobTitle.job_title }}</h3>
+            @if (jobTitle.job_description) {
+              <p class="job-desc">{{ jobTitle.job_description }}</p>
             }
           </div>
-          @if (selectedJobTitleId() === jobTitle.id) {
-            <div class="selected-indicator">✓</div>
-          }
-        </div>
-      }
-    </div>
+        }
+      </div>
+    </main>
 
     @if (selectedJobTitleId()) {
-      <div class="action-buttons">
+      <div class="action-section">
         <button 
-          class="btn btn-primary"
+          class="btn-next"
           (click)="proceedToSkillsEvaluation()"
           aria-label="Proceed to skills evaluation">
-          Procedi alla Valutazione → 
+          Avanti →
         </button>
       </div>
     }
-  </section>
-}
+  }
+
+  <footer class="bottom-footer">
+    <div class="footer-content">
+      <button class="back-btn" (click)="goBack()" aria-label="Go back">
+        ← Indietro
+      </button>
+      <div class="logo">SkillBridge</div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+</div>

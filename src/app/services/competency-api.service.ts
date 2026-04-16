@@ -15,6 +15,6 @@ export class CompetencyApiService {
   }
 
   getJobTitlesByArea(areaId: string): Observable<JobTitle[]> {
-    return this.http.get<JobTitle[]>(`${this.baseUrl}/data/job-titles/area/${areaId}`);
+    return this.http.get<JobTitle[]>(`${this.baseUrl}/data/job_titles/area/${areaId}`);
   }
 }

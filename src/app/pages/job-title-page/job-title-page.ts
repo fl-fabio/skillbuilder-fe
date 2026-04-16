@@ -35,12 +35,14 @@ export class JobTitlePage {
     }
 
     this.areaId.set(areaIdParam);
+    console.log('Loading job titles for area:', areaIdParam);
 
     try {
       const jobTitles = await this.competencyService.getJobTitlesByArea(areaIdParam);
+      console.log('Job titles loaded:', jobTitles);
       this.jobTitles.set(jobTitles);
     } catch (error) {
-      console.error(error);
+      console.error('Error loading job titles:', error);
     }
   }
 
