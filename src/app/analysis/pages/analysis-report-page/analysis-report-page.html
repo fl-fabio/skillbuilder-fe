@@ -1,0 +1,124 @@
+<main class="analysis-page">
+  <section class="hero">
+    <div>
+      <a class="back-link" routerLink="/choice-area">Torna al percorso</a>
+      <span class="eyebrow">Analysis Report</span>
+      <h1>Report finale delle competenze</h1>
+      <p>Analisi generata dai dati reali del backend per il profilo autenticato.</p>
+    </div>
+  </section>
+
+  @if (isLoading()) {
+    <section class="state-card">Caricamento analisi in corso...</section>
+  } @else if (errorMessage()) {
+    <section class="state-card error">{{ errorMessage() }}</section>
+  } @else if (analysis(); as data) {
+    <section class="overview-grid">
+      <article class="panel header-panel">
+        <span class="panel-label">Ruolo target</span>
+        <h2>{{ data.target.job_title }}</h2>
+
+        <div class="meta-grid">
+          <div class="meta-item">
+            <span>Area</span>
+            <strong>{{ data.target.area_name }}</strong>
+          </div>
+
+          <div class="meta-item">
+            <span>Timestamp</span>
+            <strong>{{ formatTimestamp(data.metadata.timestamp) }}</strong>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel kpi-panel">
+        <div class="kpi-card">
+          <span class="panel-label">Coverage score</span>
+          <strong>{{ formatCoverageScore(data.summary.coverage_score) }}</strong>
+        </div>
+
+        <div class="kpi-card">
+          <span class="panel-label">Compatibility</span>
+          <span class="compatibility-badge">{{ data.summary.compatibility }}</span>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading">
+        <div>
+          <span class="panel-label">Skills</span>
+          <h3>Mappatura delle competenze</h3>
+        </div>
+      </div>
+
+      @if (data.skills.length === 0) {
+        <div class="empty-card">Nessuna skill disponibile nel report.</div>
+      } @else {
+        <div class="skills-grid">
+          @for (skill of data.skills; track skill.skill_name) {
+            <article
+              class="skill-card"
+              [class.gap-critical]="gapTone(skill.gap_pct) === 'critical'"
+              [class.gap-warning]="gapTone(skill.gap_pct) === 'warning'"
+              [class.gap-good]="gapTone(skill.gap_pct) === 'good'"
+            >
+              <div class="skill-header">
+                <h4>{{ skill.skill_name }}</h4>
+                <span class="gap-pill">{{ formatPercentage(skill.gap_pct) }} gap</span>
+              </div>
+
+              <div class="metric-grid">
+                <div>
+                  <span>User level</span>
+                  <strong>{{ formatPercentage(skill.user_level_pct) }}</strong>
+                </div>
+
+                <div>
+                  <span>Gap</span>
+                  <strong>{{ formatPercentage(skill.gap_pct) }}</strong>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </section>
+
+    <section class="panel">
+      <div class="section-heading">
+        <div>
+          <span class="panel-label">Training Priorities</span>
+          <h3>Top 5 priorità formative</h3>
+        </div>
+      </div>
+
+      @if (topTrainingPriorities().length === 0) {
+        <div class="empty-card">Nessuna priorità formativa disponibile.</div>
+      } @else {
+        <div class="priority-list">
+          @for (priority of topTrainingPriorities(); track priority.skill_name) {
+            <article
+              class="priority-card"
+              [class.gap-critical]="gapTone(priority.gap_pct) === 'critical'"
+              [class.gap-warning]="gapTone(priority.gap_pct) === 'warning'"
+              [class.gap-good]="gapTone(priority.gap_pct) === 'good'"
+            >
+              <div>
+                <h4>{{ priority.skill_name }}</h4>
+                <p>Priority score {{ formatPriorityScore(priority.priority_score) }}</p>
+              </div>
+
+              <div class="priority-metrics">
+                <span>Gap {{ formatPercentage(priority.gap_pct) }}</span>
+                <span>Expected level {{ priority.expected_level }}</span>
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </section>
+  } @else {
+    <section class="state-card error">Impossibile caricare l’analisi. Riprova più tardi.</section>
+  }
+</main>
