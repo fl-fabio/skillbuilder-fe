@@ -15,6 +15,9 @@ export class UsersService {
   readonly error = signal<string | null>(null);
   readonly selectedUserId = signal<number | null>(null);
 
+  // ID dell'utente loggato (da usare per submitAssessment)
+  readonly loggedUserId = signal<number>(1);
+
   async getUsers(): Promise<User[]> {
     this.isLoading.set(true);
     this.error.set(null);

@@ -1,0 +1,96 @@
+<div class="skill-page-wrapper">
+  
+  <div class="skill-architecture-container">
+
+    <!-- HEADER: Titolo a sinistra, Area Badge a destra -->
+    <header class="main-header">
+      <div class="header-left">
+        <h1 class="main-title">Skill Architecture</h1>
+        <p class="subtitle">
+          Metti in relazione le tue competenze per costruire il ponte che ti
+          porterà al tuo prossimo ruolo professionale.
+        </p>
+      </div>
+      <div class="header-right">
+        <span class="area-badge">
+          Area: {{ skillsService.selectedArea()?.area || 'DevOps & Cloud' }}
+        </span>
+      </div>
+    </header>
+
+    <!-- CARD PRINCIPALE -->
+    <section class="skills-card-main">
+
+      <!-- Titolo ruolo -->
+      <h2 class="card-title">
+        Indica le tue abilità come 
+        <strong>{{ skillsService.selectedJobTitle()?.job_title || 'DevOps Engineer' }}</strong>!
+      </h2>
+
+      <!-- Loading -->
+      <div class="loading-state" *ngIf="skillsService.loading()">
+        <div class="spinner"></div>
+      </div>
+
+      <!-- GRIGLIA SKILLS -->
+      <div
+        class="skills-grid"
+        *ngIf="!skillsService.loading() && skillsService.skills().length > 0"
+      >
+        <div
+          class="skill-item"
+          *ngFor="let skill of skillsService.skills(); trackBy: trackBySkill"
+        >
+          <div class="skill-header">
+            <span class="skill-name">{{ skill.name }}</span>
+            <span class="vote-label">Voto: <span class="vote-number">{{ skill.user_score || 5 }}</span><span class="vote-max">/10</span></span>
+          </div>
+
+          <div class="slider-wrapper">
+            <input
+              type="range"
+              min="1"
+              max="10"
+              [value]="skill.user_score || 5"
+              (input)="updateScore(skill, +$any($event.target).value)"
+              class="custom-slider"
+              [style.background]="getSliderGradient(skill.user_score)"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- STATO VUOTO -->
+      <div
+        class="empty-state"
+        *ngIf="!skillsService.loading() && skillsService.skills().length === 0"
+      >
+        <p>Nessuna skill trovata per questo ruolo.</p>
+      </div>
+      
+    </section>
+
+    <!-- BOTTONI DI NAVIGAZIONE -->
+    <div class="navigation-buttons" *ngIf="!skillsService.loading() && skillsService.skills().length > 0">
+      <button class="btn-back" (click)="goBack()">← Indietro</button>
+      <button class="report-link" (click)="submit()">
+        Procedi al report →
+      </button>
+    </div>
+
+    <!-- FOOTER PAGE come in Figma -->
+    <footer class="page-footer">
+      <div class="footer-left">
+        <strong>SkillBridge</strong>
+        <p>© 2024 SkillBridge. The Architectural Bridge to your career.</p>
+      </div>
+      <div class="footer-right">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Help Center</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </footer>
+
+  </div>
+</div>
