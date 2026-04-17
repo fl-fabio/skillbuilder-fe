@@ -1,42 +1,102 @@
 <div class="onboarding-container">
-  
   <header class="header-section">
-    <h2 class="pre-title">Benvenuto!</h2>
-    <h1 class="main-title">Facciamo il primo passo insieme.</h1>
+    <div class="header-copy">
+      <span class="pre-title">Inizia da qui</span>
+      <h1 class="main-title">Scegli l'area da cui vuoi partire.</h1>
 
-    <p class="subtitle">
-      Seleziona l'area che ti rappresenta di più: creeremo un percorso formativo<br>
-      pensato per accompagnarti verso i tuoi obiettivi.
-    </p>
+      <p class="subtitle">
+        Seleziona l'ambito che descrive meglio il tuo obiettivo professionale. Da qui
+        iniziamo a costruire un percorso chiaro e coerente.
+      </p>
+    </div>
+
+    <div class="selection-summary">
+      <span class="summary-label">Selezione attuale</span>
+      @if (selectedArea(); as currentArea) {
+        <strong>{{ getDisplayAreaName(currentArea.area) }}</strong>
+        <p>Continua per esplorare i ruoli disponibili in quest'area.</p>
+      } @else {
+        <strong>Seleziona un'area</strong>
+        <p>Scegli un'area per sbloccare il prossimo passaggio.</p>
+      }
+    </div>
   </header>
 
   <main class="cards-section">
-    <div class="cards-grid">
-      @for (area of areas(); track area.id) {
-        <div 
-          class="area-card" 
-          [class.selected]="selectedAreaId() === area.id"
-          (click)="selectArea(area.id)"
-        >
-          <!-- Icona dinamica in base al nome dell'area -->
-          <div class="icon-box">
-            <img [src]="getIconForArea(area.area)" [alt]="'Icona ' + area.area" class="card-icon">
-          </div>
-          
-          <h3 class="area-title">{{ area.area }}</h3>
-          <p class="area-desc">{{ area.description }}</p>
-        </div>
-      }
+    <div class="section-intro">
+      <div>
+        <h2>Aree disponibili</h2>
+        <p>Scegli il dominio da cui iniziare il tuo percorso.</p>
+      </div>
     </div>
 
-    <!-- BOTTONE AVANTI AGGIUNTO QUI -->
+    @if (isLoading()) {
+      <div class="state-card">Caricamento delle aree in corso...</div>
+    } @else if (error()) {
+      <div class="state-card error">{{ error() }}</div>
+    } @else {
+      <div class="cards-grid">
+        @for (area of areas(); track area.id) {
+          <button
+            class="area-card"
+            type="button"
+            [class.selected]="selectedAreaId() === area.id"
+            [attr.aria-pressed]="selectedAreaId() === area.id"
+            (click)="selectArea(area.id)"
+          >
+            <div class="card-top">
+              <div class="icon-box">
+                <img
+                  [src]="getIconForArea(area.area)"
+                  [alt]="'Icona ' + getDisplayAreaName(area.area)"
+                  class="card-icon"
+                >
+              </div>
+              @if (selectedAreaId() === area.id) {
+                <span class="selected-indicator">
+                  <span class="indicator-dot"></span>
+                  Selezionata
+                </span>
+              }
+            </div>
+
+            <h3 class="area-title">{{ getDisplayAreaName(area.area) }}</h3>
+            <p class="area-desc">{{ area.description }}</p>
+
+            <div class="card-footer">
+              @if (selectedAreaId() === area.id) {
+                <span class="card-status active">
+                  <span class="status-dot"></span>
+                  Area attiva
+                </span>
+              } @else {
+                <span class="card-status">Seleziona per continuare</span>
+              }
+            </div>
+          </button>
+        }
+      </div>
+    }
+
     <div class="action-section">
-      <button 
-        class="primary-btn" 
+      <div class="action-copy">
+        @if (selectedArea(); as currentArea) {
+          <p>
+            Hai selezionato <strong>{{ getDisplayAreaName(currentArea.area) }}</strong>.
+            Continua per visualizzare i ruoli disponibili.
+          </p>
+        } @else {
+          <p>Seleziona un'area per procedere.</p>
+        }
+      </div>
+
+      <button
+        class="primary-btn"
+        [class.enabled]="!!selectedAreaId()"
         [disabled]="!selectedAreaId()"
         (click)="goNext()"
       >
-        Avanti
+        Continua
       </button>
     </div>
   </main>
@@ -45,15 +105,13 @@
     <div class="footer-content">
       <div class="logo">SkillBridge</div>
       <div class="footer-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Help Center</a>
+        <a href="#">Privacy</a>
+        <a href="#">Termini</a>
+        <a href="#">Supporto</a>
       </div>
       <div class="copyright">
-        © 2026 SkillBridge. The Architectural Bridge to your Career
+        © 2026 SkillBridge. Percorsi professionali guidati per la crescita digitale.
       </div>
     </div>
   </footer>
-
 </div>
-

@@ -1,1 +1,26 @@
+@if (showShell()) {
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" routerLink="/choice-area">
+        <span class="brand-badge">SB</span>
+        <div>
+          <h1>SkillBridge</h1>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navigazione principale">
+        <a
+          routerLink="/choice-area"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          Percorso
+        </a>
+        <a routerLink="/profile" routerLinkActive="active">Profilo</a>
+        <button class="logout-button" type="button" (click)="logout()">Esci</button>
+      </nav>
+    </header>
+  </div>
+}
+
 <router-outlet></router-outlet>
