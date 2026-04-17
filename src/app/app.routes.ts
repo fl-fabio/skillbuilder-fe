@@ -36,6 +36,11 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./profile/pages/profile-edit-page/profile-edit-page').then(
         (m) => m.ProfileEditPage
+    path: 'analysis-report',
+    canActivate: [guestGuard],
+    loadComponent: () =>
+      import('./analysis/pages/analysis-report-page/analysis-report-page').then(
+        (m) => m.AnalysisReportPage
       )
   },
   {
