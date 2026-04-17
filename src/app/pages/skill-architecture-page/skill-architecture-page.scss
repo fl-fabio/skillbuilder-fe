@@ -54,16 +54,16 @@
 .skills-card-main {
   background: #f0f7ff; // Colore sfondino come da Figma
   border-radius: 16px;
-  padding: 20px 25px;
+  padding: 24px 30px;
   margin: 10px auto;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 
   .card-title {
     text-align: center;
     color: #1e3a8a;
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 500;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 
     strong {
       font-weight: 700;
@@ -76,7 +76,7 @@
 .skills-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px 25px;
+  gap: 8px 30px;
 }
 
 // Singola Card Bianca (Skill)
@@ -226,11 +226,13 @@
 
 // Area Badge
 .area-badge {
-  background: #eff6ff;
+  background: transparent;
   color: #3b82f6;
   font-weight: 600;
   font-size: 0.9rem;
-  padding: 8px 16px;
-  border-radius: 50px;
-  border: 1px solid #bfdbfe;
+  padding: 4px 10px;
+  border-radius: 0;
+  border: none;
+  border-bottom: 2px solid #3b82f6;
+  display: inline-block;
 }
