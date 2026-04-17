@@ -6,6 +6,7 @@ import { LoginPage } from './pages/login-page/login-page';
 import { RegisterPage } from './pages/register-page/register-page';
 import { ChoiceAreaPage } from './pages/choice-area/choice-area';
 import { JobTitlePage } from './pages/job-title-page/job-title-page';
+import { ProfileEditPage } from './profile/pages/profile-edit-page/profile-edit-page';
 
 
 export const routes: Routes = [
@@ -37,16 +38,9 @@ export const routes: Routes = [
   {
     path: 'profile',
     canActivate: [authGuard],
-    loadComponent: () =>
-      import('./profile/pages/profile-edit-page/profile-edit-page').then(
-        (m) => m.ProfileEditPage
-    path: 'analysis-report',
-    canActivate: [guestGuard],
-    loadComponent: () =>
-      import('./analysis/pages/analysis-report-page/analysis-report-page').then(
-        (m) => m.AnalysisReportPage
-      )
+    component: ProfileEditPage
   },
+
   {
     path: 'users',
     canActivate: [authGuard],
