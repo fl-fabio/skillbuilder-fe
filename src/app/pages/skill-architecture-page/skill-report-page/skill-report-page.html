@@ -1,0 +1,133 @@
+<div class="report-wrapper">
+  <div class="report-container">
+
+    <!-- HEADER -->
+    <header class="report-header">
+      <div class="header-left">
+        <h1 class="report-title">Skill Architecture</h1>
+        <p class="report-subtitle">Il tuo report di autovalutazione delle competenze.</p>
+      </div>
+      <div class="header-right" *ngIf="skillsService.selectedArea()">
+        <span class="area-badge">Area: {{ skillsService.selectedArea()?.area }}</span>
+      </div>
+    </header>
+
+    <!-- NESSUNA SKILL: stato vuoto -->
+    <div class="empty-state" *ngIf="skillsService.skills().length === 0">
+      <div class="empty-icon">📊</div>
+      <p>Nessuna valutazione trovata.</p>
+      <button class="btn-back" (click)="goBack()">← Torna alla valutazione</button>
+    </div>
+
+    <!-- CONTENUTO REPORT -->
+    <div *ngIf="skillsService.skills().length > 0">
+
+      <!-- TITOLO RUOLO -->
+      <div class="role-banner" *ngIf="skillsService.selectedJobTitle()">
+        <span class="role-label">Ruolo valutato:</span>
+        <span class="role-name">{{ skillsService.selectedJobTitle()?.job_title }}</span>
+      </div>
+
+      <!-- CARD PRINCIPALE -->
+      <div class="report-card">
+
+        <!-- PIE CHART + LEGENDA -->
+        <div class="chart-section">
+
+          <h2 class="section-title">Distribuzione Competenze</h2>
+
+          <div class="chart-layout">
+
+            <!-- SVG PIE CHART -->
+            <div class="pie-wrapper">
+              <svg viewBox="0 0 100 100" class="pie-svg">
+                <g *ngFor="let slice of getSlices(); trackBy: trackBySlice">
+                  <path
+                    [attr.d]="getSlicePath(slice.startAngle, slice.endAngle)"
+                    [attr.fill]="slice.color"
+                    class="pie-slice"
+                  />
+                </g>
+                <!-- Cerchio centrale (donut effect) -->
+                <circle cx="50" cy="50" r="22" fill="white" />
+                <!-- Testo centrale -->
+                <text x="50" y="47" text-anchor="middle" class="donut-label-top">
+                  {{ skillsService.skills().length }}
+                </text>
+                <text x="50" y="56" text-anchor="middle" class="donut-label-bottom">
+                  skills
+                </text>
+              </svg>
+            </div>
+
+            <!-- LEGENDA -->
+            <div class="legend">
+              <div
+                class="legend-item"
+                *ngFor="let slice of getSlices(); trackBy: trackBySlice"
+              >
+                <span class="legend-dot" [style.background]="slice.color"></span>
+                <span class="legend-text">{{ slice.label }}</span>
+                <span class="legend-count">{{ slice.count }} ({{ slice.percentage }}%)</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- DIVIDER -->
+        <div class="divider"></div>
+
+        <!-- LISTA SKILL -->
+        <div class="skills-section">
+
+          <h2 class="section-title">Dettaglio per Skill</h2>
+
+          <div class="skills-list">
+            <div
+              class="skill-row"
+              *ngFor="let skill of skillsService.skills()"
+            >
+              <div class="skill-row-left">
+                <span class="skill-row-name">{{ skill.name }}</span>
+                <span class="skill-row-category">{{ skill.category }}</span>
+              </div>
+
+              <div class="skill-row-right">
+                <!-- Barra progresso -->
+                <div class="score-bar-track">
+                  <div
+                    class="score-bar-fill"
+                    [style.width.%]="((skill.user_score ?? 5) / 10) * 100"
+                    [style.background]="getScoreColor(skill.user_score ?? 5)"
+                  ></div>
+                </div>
+
+                <!-- Voto -->
+                <span class="score-badge" [style.background]="getScoreColor(skill.user_score ?? 5)">
+                  {{ skill.user_score ?? 5 }}/10
+                </span>
+
+                <!-- Label livello -->
+                <span class="level-label" [style.color]="getScoreColor(skill.user_score ?? 5)">
+                  {{ getScoreLabel(skill.user_score ?? 5) }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- BOTTONE TORNA INDIETRO -->
+      <div class="report-footer">
+        <button class="btn-back" (click)="goBack()">
+          ← Modifica valutazione
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</div>
