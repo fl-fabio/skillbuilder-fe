@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
 import { ErrorPage } from './pages/error-page/error-page';
 import { LoginPage } from './pages/login-page/login-page';
@@ -15,24 +16,27 @@ export const routes: Routes = [
   },
   {
     path: 'login',
+    canActivate: [guestGuard],
     component: LoginPage
   },
   {
     path: 'register',
+    canActivate: [guestGuard],
     component: RegisterPage
   },
-    {
+  {
     path: 'choice-area',
-    canActivate: [guestGuard],
+    canActivate: [authGuard],
     component: ChoiceAreaPage
   },
   {
     path: 'job-title',
+    canActivate: [authGuard],
     component: JobTitlePage
   },
   {
     path: 'profile',
-    canActivate: [guestGuard],
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./profile/pages/profile-edit-page/profile-edit-page').then(
         (m) => m.ProfileEditPage
@@ -40,6 +44,7 @@ export const routes: Routes = [
   },
   {
     path: 'users',
+    canActivate: [authGuard],
     loadChildren: () =>
       import('./routes/users.routes').then((m) => m.USERS_ROUTES)
   },
