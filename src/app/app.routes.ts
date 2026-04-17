@@ -31,6 +31,14 @@ export const routes: Routes = [
     component: JobTitlePage
   },
   {
+    path: 'analysis-report',
+    canActivate: [guestGuard],
+    loadComponent: () =>
+      import('./analysis/pages/analysis-report-page/analysis-report-page').then(
+        (m) => m.AnalysisReportPage
+      )
+  },
+  {
     path: 'users',
     loadChildren: () =>
       import('./routes/users.routes').then((m) => m.USERS_ROUTES)
