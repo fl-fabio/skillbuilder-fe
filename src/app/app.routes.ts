@@ -6,7 +6,6 @@ import { RegisterPage } from './pages/register-page/register-page';
 import { ChoiceAreaPage } from './pages/choice-area/choice-area';
 import { JobTitlePage } from './pages/job-title-page/job-title-page';
 
-
 export const routes: Routes = [
   {
     path: '',
@@ -21,7 +20,7 @@ export const routes: Routes = [
     path: 'register',
     component: RegisterPage
   },
-    {
+  {
     path: 'choice-area',
     canActivate: [guestGuard],
     component: ChoiceAreaPage
@@ -29,6 +28,14 @@ export const routes: Routes = [
   {
     path: 'job-title',
     component: JobTitlePage
+  },
+  {
+    path: 'profile',
+    canActivate: [guestGuard],
+    loadComponent: () =>
+      import('./profile/pages/profile-edit-page/profile-edit-page').then(
+        (m) => m.ProfileEditPage
+      )
   },
   {
     path: 'analysis-report',
