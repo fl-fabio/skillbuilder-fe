@@ -39,7 +39,7 @@
       >
         <div
           class="skill-item"
-          *ngFor="let skill of skillsService.skills(); trackBy: trackBySkill"
+          *ngFor="let skill of skillsService.skills().slice(0, 10); trackBy: trackBySkill"
         >
           <div class="skill-header">
             <span class="skill-name">{{ skill.name }}</span>
