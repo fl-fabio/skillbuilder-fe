@@ -1,9 +1,12 @@
-<section class="hero">
-  <div>
-    <span class="eyebrow">Selezione Ruolo</span>
-    <h2>Scegli il tuo Job Title</h2>
-    <p>Seleziona il ruolo che meglio corrisponde alle tue competenze nell'area scelta.</p>
-  </div>
+<div class="onboarding-container">
+  
+  <header class="header-section">
+    <h2 class="pre-title">Selezione Ruolo</h2>
+    <h1 class="main-title">Scegli il tuo Job Title</h1>
+    <p class="subtitle">
+      Seleziona il ruolo che meglio corrisponde alle tue competenze nell'area scelta.
+    </p>
+  </header>
 
   <button class="back-btn" (click)="goBack()" aria-label="Go back">
     ← Indietro
@@ -30,22 +33,33 @@
               <p>{{ jobTitle.description }}</p>
             }
           </div>
-          @if (selectedJobTitleId() === jobTitle.id) {
-            <div class="selected-indicator">✓</div>
-          }
-        </div>
-      }
-    </div>
+        }
+      </div>
+    </main>
 
     @if (selectedJobTitleId()) {
-      <div class="action-buttons">
+      <div class="action-section">
         <button 
-          class="btn btn-primary"
+          class="btn-next"
           (click)="proceedToSkillsEvaluation()"
           aria-label="Proceed to skills evaluation">
-          Procedi alla Valutazione → 
+          Avanti →
         </button>
       </div>
     }
-  </section>
-}
+  }
+
+  <footer class="bottom-footer">
+    <div class="footer-content">
+      <button class="back-btn" (click)="goBack()" aria-label="Go back">
+        ← Indietro
+      </button>
+      <div class="logo">SkillBridge</div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
