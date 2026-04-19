@@ -1,0 +1,133 @@
+<div class="onboarding-container">
+  <header class="header-section">
+    <div class="header-copy">
+      <span class="pre-title">Valutazione competenze</span>
+      <h1 class="main-title">Valuta il tuo livello di competenza.</h1>
+
+      <p class="subtitle">
+        Imposta un punteggio per ciascuna skill del ruolo selezionato. Questo passaggio
+        aiuta a costruire un report più preciso e coerente con il profilo professionale.
+      </p>
+    </div>
+
+    <div class="selection-summary">
+      <span class="summary-label">Ruolo selezionato</span>
+      <strong>{{ selectedJobId() || 'DevOps Engineer' }}</strong>
+      <p>
+        Assegna un valore da 1 a 10 alle skill mostrate per proseguire verso il report finale.
+      </p>
+    </div>
+  </header>
+
+  <main class="cards-section">
+    <div class="section-intro">
+      <div>
+        <h2>Competenze del ruolo</h2>
+        <p>Definisci il livello percepito per ogni abilità presente in elenco.</p>
+      </div>
+    </div>
+
+    <section class="skills-card-main">
+      <h2 class="card-title">
+        Indica le tue abilità come
+        <strong>{{ selectedJobId() || 'DevOps Engineer' }}</strong>
+      </h2>
+
+      @if (skillsService.isLoading()) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Caricamento delle skill in corso...</p>
+        </div>
+      }
+
+  @if (!skillsService.isLoading() && groupedSkills().length > 0) {
+        <div class="skills-groups">
+            @for (group of groupedSkills(); track group.type) {
+            <section class="skill-group-card">
+                <div class="skill-group-hero">
+                <div class="skill-group-copy">
+                    <span class="skill-group-eyebrow">{{ group.label }}</span>
+                    <p class="skill-group-description">
+                    Valutazione delle competenze appartenenti all'area {{ group.label.toLowerCase() }}.
+                    </p>
+                </div>
+
+                <div class="skill-group-meta">
+                    <span class="skill-group-count">{{ group.skills.length }}</span>
+                    <span class="skill-group-count-label">skill</span>
+                </div>
+                </div>
+
+                <div class="skills-grid">
+                @for (skill of group.skills; track skill.id) {
+                    <div class="skill-item">
+                    <div class="skill-header">
+                        <span class="skill-name">{{ skill.skill }}</span>
+                        <span class="vote-label">
+                        Voto:
+                        <span class="vote-number">{{ skill.user_score || 5 }}</span>
+                        <span class="vote-max">/10</span>
+                        </span>
+                    </div>
+
+                    <div class="slider-wrapper">
+                        <input
+                        type="range"
+                        min="1"
+                        max="10"
+                        [value]="skill.user_score || 5"
+                        (input)="updateScore(skill, +$any($event.target).value)"
+                        class="custom-slider"
+                        [style.background]="getSliderGradient(skill.user_score)"
+                        />
+                    </div>
+                    </div>
+                }
+                </div>
+            </section>
+            }
+        </div>
+    }
+
+    @if (!skillsService.isLoading() && skillsService.skills().length === 0) {
+        <div class="empty-state">
+          <p>Nessuna skill trovata per questo ruolo.</p>
+        </div>
+    }
+    </section>
+
+    @if (!skillsService.isLoading() && skillsService.skills().length > 0) {
+      <div class="action-section">
+        <div class="action-copy">
+          <p>
+            Dopo la valutazione delle skill sarà possibile generare il report finale del profilo.
+          </p>
+        </div>
+
+        <div class="action-buttons">
+          <button class="secondary-btn" type="button" (click)="goBack()">
+            Indietro
+          </button>
+
+          <button class="primary-btn enabled" type="button" (click)="submit()">
+            Procedi al report
+          </button>
+        </div>
+      </div>
+    }
+  </main>
+
+  <footer class="bottom-footer">
+    <div class="footer-content">
+      <div class="logo">SkillBridge</div>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Termini</a>
+        <a href="#">Supporto</a>
+      </div>
+      <div class="copyright">
+        © 2026 SkillBridge. Percorsi professionali guidati per la crescita digitale.
+      </div>
+    </div>
+  </footer>
+</div>

@@ -7,6 +7,7 @@ import { RegisterPage } from './pages/register-page/register-page';
 import { ChoiceAreaPage } from './pages/choice-area/choice-area';
 import { JobTitlePage } from './pages/job-title-page/job-title-page';
 import { ProfileEditPage } from './profile/pages/profile-edit-page/profile-edit-page';
+import { SkillsEvaluation } from './pages/skills-evaluation/skills-evaluation';
 
 
 export const routes: Routes = [
@@ -40,7 +41,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
     component: ProfileEditPage
   },
-
+  {
+    path: 'skills-evaluation',
+    canActivate: [authGuard],
+    component: SkillsEvaluation
+  },
   {
     path: 'users',
     canActivate: [authGuard],
