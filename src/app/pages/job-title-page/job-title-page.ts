@@ -59,6 +59,14 @@ export class JobTitlePage implements OnInit {
     return this.selectionService.selectedAreaId();
   }
 
+  getSelectedJobTitleName(): string {
+    const selectedId = this.selectedJobTitleId();
+    if (!selectedId) return '';
+    
+    const selectedJobTitle = this.jobTitles().find(job => job.id === selectedId);
+    return selectedJobTitle?.name || '';
+  }
+
   selectJobTitle(jobTitle: JobTitle): void {
     this.selectedJobTitleId.set(jobTitle.id);
     this.competencyService.selectJobTitle(jobTitle.id);
@@ -70,12 +78,9 @@ export class JobTitlePage implements OnInit {
       return;
     }
 
-    this.router.navigate(['/skills-evaluation'], {
-      queryParams: {
-        areaId: this.areaId,
-        jobTitleId: this.selectedJobTitleId()
-      }
-    });
+    this.selectionService.setSelectedJobId(this.selectedJobTitleId()!);
+
+    this.router.navigate(['/skills-evaluation']);
   }
 
   goBack(): void {

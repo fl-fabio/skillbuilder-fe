@@ -34,7 +34,8 @@ export class CompetencyService {
     this.selectedAreaId.set(areaId);
 
     try {
-      return await firstValueFrom(this.api.getJobTitlesByArea(areaId));
+      const jobTitles = await firstValueFrom(this.api.getJobTitlesByArea(areaId));
+      return jobTitles;
     } catch (error) {
       this.error.set('Errore durante il caricamento dei job title.');
       throw error;

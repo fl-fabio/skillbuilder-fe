@@ -1,14 +1,24 @@
 <div class="onboarding-container">
   
   <header class="header-section">
-    <h2 class="pre-title">Selezione Ruolo</h2>
-    <h1 class="main-title">Scegli il tuo Job Title</h1>
-    <p class="subtitle">
-      Seleziona il ruolo che meglio corrisponde alle tue competenze nell'area scelta.
-    </p>
-    <button class="back-btn" (click)="goBack()" aria-label="Go back">
-      ← Indietro
-    </button>
+    <div class="header-copy">
+      <span class="pre-title">Selezione Ruolo</span>
+      <h1 class="main-title">Scegli il tuo Job Title</h1>
+      <p class="subtitle">
+        Seleziona il ruolo che meglio corrisponde alle tue competenze nell'area scelta.
+      </p>
+    </div>
+
+    <div class="selection-summary">
+      <span class="summary-label">Selezione attuale</span>
+      @if (selectedJobTitleId(); as currentJobTitleId) {
+        <strong>{{ getSelectedJobTitleName() }}</strong>
+        <p>Continua per iniziare la valutazione delle competenze.</p>
+      } @else {
+        <strong>Seleziona un job title</strong>
+        <p>Scegli un ruolo per sbloccare il prossimo passaggio.</p>
+      }
+    </div>
   </header>
 
   @if (isLoading()) {
@@ -18,29 +28,73 @@
   } @else if (jobTitles().length === 0) {
     <div class="state-card">Nessun job title disponibile per questa area.</div>
   } @else {
-    <main class="job-titles-container">
-      <div class="job-titles-grid">
+    <main class="cards-section">
+      <div class="section-intro">
+        <div>
+          <h2>Job Titles disponibili</h2>
+          <p>Scegli il ruolo che meglio corrisponde alle tue competenze.</p>
+        </div>
+      </div>
+
+      <div class="cards-grid">
         @for (jobTitle of jobTitles(); track jobTitle.id) {
-          <div class="job-title-card" 
-               [class.selected]="selectedJobTitleId() === jobTitle.id"
-               (click)="selectJobTitle(jobTitle)">
-            <div class="card-content">
-              <h3>{{ jobTitle.name }}</h3>
-              @if (jobTitle.description) {
-                <p>{{ jobTitle.description }}</p>
+          <button
+            class="job-title-card"
+            type="button"
+            [class.selected]="selectedJobTitleId() === jobTitle.id"
+            [attr.aria-pressed]="selectedJobTitleId() === jobTitle.id"
+            (click)="selectJobTitle(jobTitle)"
+          >
+            <div class="card-top">
+              <div class="icon-box">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 7H4C2.89543 7 2 7.89543 2 9V19C2 20.1046 2.89543 21 4 21H20C21.1046 21 22 20.1046 22 19V9C22 7.89543 21.1046 7 20 7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M16 3H8C6.89543 3 6 3.89543 6 5V7H18V5C18 3.89543 17.1046 3 16 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 12H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              @if (selectedJobTitleId() === jobTitle.id) {
+                <span class="selected-indicator">
+                  <span class="indicator-dot"></span>
+                  Selezionato
+                </span>
               }
             </div>
-          </div>
+
+            <h3 class="job-title">{{ jobTitle.name }}</h3>
+            @if (jobTitle.description) {
+              <p class="job-desc">{{ jobTitle.description }}</p>
+            }
+
+            <div class="card-footer">
+              @if (selectedJobTitleId() === jobTitle.id) {
+                <span class="card-status active">
+                  <span class="status-dot"></span>
+                  Ruolo attivo
+                </span>
+              } @else {
+                <span class="card-status">Seleziona per continuare</span>
+              }
+            </div>
+          </button>
         }
       </div>
 
       @if (selectedJobTitleId()) {
         <div class="action-section">
-          <button 
-            class="btn-next"
+          <div class="action-copy">
+            <p>
+              Hai selezionato <strong>{{ getSelectedJobTitleName() }}</strong>.
+              Continua per iniziare la valutazione delle competenze.
+            </p>
+          </div>
+
+          <button
+            class="primary-btn"
             (click)="proceedToSkillsEvaluation()"
             aria-label="Proceed to skills evaluation">
-            Avanti →
+            Continua
           </button>
         </div>
       }
