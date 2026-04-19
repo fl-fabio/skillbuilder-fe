@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CompetencyService } from '../../services/competency.service';
 import { SelectionService } from '../../services/selection.service';
@@ -6,32 +6,26 @@ import { JobTitle } from '../../models/competency.model';
 
 @Component({
   selector: 'app-job-title-page',
-  templateUrl: './job-title-page.html',
+  templateUrl: 'job-title-page.html',
   imports: [],
-  styleUrl: './job-title-page.scss',
+  styleUrl: 'job-title-page.scss',
   standalone: true
 })
-export class JobTitlePage {
+export class JobTitlePage implements OnInit {
   private readonly router = inject(Router);
   private readonly competencyService = inject(CompetencyService);
   private readonly selectionService = inject(SelectionService);
 
   readonly jobTitles = signal<JobTitle[]>([]);
   readonly selectedJobTitleId = signal<string | null>(null);
+  readonly isLoading = signal(false);
+  readonly error = signal<string | null>(null);
 
-  get isLoading() {
-    return this.competencyService.isLoading;
+  ngOnInit(): void {
+    this.loadJobTitles();
   }
 
-  get error() {
-    return this.competencyService.error;
-  }
-
-  get areaId(): string | null {
-    return this.selectionService.selectedAreaId();
-  }
-
-  async ngOnInit(): Promise<void> {
+  private async loadJobTitles(): Promise<void> {
     const areaId = this.areaId;
 
     if (!areaId) {
@@ -39,6 +33,7 @@ export class JobTitlePage {
       return;
     }
 
+    this.isLoading.set(true);
     try {
       const jobTitles = await this.competencyService.getJobTitlesByArea(areaId);
       this.jobTitles.set(
@@ -51,9 +46,17 @@ export class JobTitlePage {
             ''
         }))
       );
+      this.error.set(null);
     } catch (error) {
       console.error('Error loading job titles:', error);
+      this.error.set('Errore nel caricamento dei job titles');
+    } finally {
+      this.isLoading.set(false);
     }
+  }
+
+  get areaId(): string | null {
+    return this.selectionService.selectedAreaId();
   }
 
   selectJobTitle(jobTitle: JobTitle): void {
