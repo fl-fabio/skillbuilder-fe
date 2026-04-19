@@ -8,24 +8,29 @@
     </p>
   </header>
 
-  @if (isLoading()) {
-    <div class="state-card">Caricamento job titles...</div>
-  } @else if (error()) {
-    <div class="state-card error">{{ error() }}</div>
-  } @else if (jobTitles().length === 0) {
-    <div class="state-card error">❌ Nessun job title. Area ID: {{ areaId() }}</div>
-  } @else {
-    <main class="cards-section">
-      <div class="cards-grid">
-        @for (jobTitle of jobTitles(); track jobTitle.id) {
-          <div 
-            class="job-card" 
-            [class.selected]="selectedJobTitleId() === jobTitle.id"
-            (click)="selectJobTitle(jobTitle)"
-          >
-            <h3 class="job-title">{{ jobTitle.job_title }}</h3>
-            @if (jobTitle.job_description) {
-              <p class="job-desc">{{ jobTitle.job_description }}</p>
+  <button class="back-btn" (click)="goBack()" aria-label="Go back">
+    ← Indietro
+  </button>
+</section>
+
+@if (isLoading()) {
+  <div class="state-card">Caricamento job titles...</div>
+} @else if (error()) {
+  <div class="state-card error">{{ error() }}</div>
+} @else if (jobTitles().length === 0) {
+  <div class="state-card">Nessun job title disponibile per questa area.</div>
+} @else {
+  <section class="job-titles-container">
+    <div class="job-titles-grid">
+<!--       <pre>{{ jobTitles() | json }}</pre> -->
+      @for (jobTitle of jobTitles(); track jobTitle.id) {
+        <div class="job-title-card" 
+             [class.selected]="selectedJobTitleId() === jobTitle.id"
+             (click)="selectJobTitle(jobTitle)">
+          <div class="card-content">
+            <h3>{{ jobTitle.name }}</h3>
+            @if (jobTitle.description) {
+              <p>{{ jobTitle.description }}</p>
             }
           </div>
         }

@@ -6,9 +6,11 @@ export interface CompetencyArea {
 
 export interface JobTitle {
   id: string;
-  job_title: string;
-  id_area: string;
-  job_description?: string;
+  name?: string;
+  title?: string;
+  job_title?: string;
+  area_id: string;
+  description?: string;
 }
 
 export interface JobTitleSelection {

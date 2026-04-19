@@ -1,0 +1,127 @@
+<main class="profile-screen">
+  <section class="profile-shell">
+    <header class="page-header">
+      <div class="page-copy">
+        <span class="eyebrow">Area personale</span>
+        <h1>Modifica il tuo profilo</h1>
+        <p>
+          Aggiorna le informazioni del tuo account SkillBridge e gestisci in modo sicuro
+          il tuo accesso alla piattaforma.
+        </p>
+      </div>
+
+      <a class="back-link" routerLink="/choice-area">Torna al percorso</a>
+    </header>
+
+    <section class="profile-card">
+      @if (isLoading()) {
+        <div class="state-card">Caricamento profilo...</div>
+      } @else if (!hasProfile()) {
+        <div class="state-card error" role="alert">
+          {{ errorMessage() || 'Profilo non disponibile.' }}
+        </div>
+      } @else {
+        <form class="profile-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="card-head">
+            <div>
+              <h2>I tuoi dati</h2>
+              <p>Nome, email ed eta vengono sincronizzati con il tuo account backend.</p>
+            </div>
+          </div>
+
+          @if (errorMessage()) {
+            <div class="feedback-banner error" role="alert">
+              {{ errorMessage() }}
+            </div>
+          }
+
+          @if (successMessage()) {
+            <div class="feedback-banner success" role="status">
+              {{ successMessage() }}
+            </div>
+          }
+
+          <div class="form-grid">
+            <div class="field-group">
+              <label class="field-label" for="name">Nome</label>
+              <input
+                id="name"
+                type="text"
+                formControlName="name"
+                placeholder="Inserisci il tuo nome"
+                autocomplete="name"
+              />
+              @if (nameControl.touched && nameControl.hasError('required')) {
+                <p class="field-error">Inserisci il nome.</p>
+              }
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                formControlName="email"
+                placeholder="name@example.com"
+                autocomplete="email"
+              />
+              @if (emailControl.touched && emailControl.hasError('required')) {
+                <p class="field-error">Inserisci la tua email.</p>
+              }
+              @if (emailControl.touched && emailControl.hasError('email')) {
+                <p class="field-error">Inserisci un indirizzo email valido.</p>
+              }
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="age">Eta</label>
+              <input
+                id="age"
+                type="number"
+                min="0"
+                formControlName="age"
+                placeholder="0"
+                autocomplete="off"
+              />
+              @if (ageControl.touched && ageControl.hasError('required')) {
+                <p class="field-error">Inserisci la tua eta.</p>
+              }
+              @if (ageControl.touched && ageControl.hasError('min')) {
+                <p class="field-error">L'eta deve essere un numero valido e non negativo.</p>
+              }
+            </div>
+          </div>
+
+          <div class="actions">
+            <button
+              class="primary-button"
+              type="submit"
+              [disabled]="form.invalid || isSubmitting() || isDeleting()"
+            >
+              @if (isSubmitting()) {
+                <span class="spinner" aria-hidden="true"></span>
+                <span>Salvataggio in corso...</span>
+              } @else {
+                <span>Aggiorna profilo</span>
+              }
+            </button>
+
+            <button
+              class="danger-button"
+              type="button"
+              [disabled]="isSubmitting() || isDeleting()"
+              (click)="onDeleteAccount()"
+            >
+              @if (isDeleting()) {
+                <span class="spinner danger-spinner" aria-hidden="true"></span>
+                <span>Eliminazione in corso...</span>
+              } @else {
+                <span>Elimina account</span>
+              }
+            </button>
+          </div>
+        </form>
+      }
+    </section>
+  </section>
+</main>

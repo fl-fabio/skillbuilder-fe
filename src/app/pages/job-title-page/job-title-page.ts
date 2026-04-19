@@ -1,22 +1,23 @@
 import { Component, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { CompetencyService } from '../../services/competency.service';
+import { SelectionService } from '../../services/selection.service';
 import { JobTitle } from '../../models/competency.model';
 
 @Component({
   selector: 'app-job-title-page',
   templateUrl: './job-title-page.html',
+  imports: [],
   styleUrl: './job-title-page.scss',
   standalone: true
 })
 export class JobTitlePage {
-  private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly competencyService = inject(CompetencyService);
+  private readonly selectionService = inject(SelectionService);
 
   readonly jobTitles = signal<JobTitle[]>([]);
   readonly selectedJobTitleId = signal<string | null>(null);
-  readonly areaId = signal<string | null>(null);
 
   get isLoading() {
     return this.competencyService.isLoading;
@@ -26,21 +27,30 @@ export class JobTitlePage {
     return this.competencyService.error;
   }
 
-  async ngOnInit(): Promise<void> {
-    const areaIdParam = this.route.snapshot.paramMap.get('areaId');
+  get areaId(): string | null {
+    return this.selectionService.selectedAreaId();
+  }
 
-    if (!areaIdParam) {
-      this.router.navigate(['/']);
+  async ngOnInit(): Promise<void> {
+    const areaId = this.areaId;
+
+    if (!areaId) {
+      await this.router.navigate(['/choice-area']);
       return;
     }
 
-    this.areaId.set(areaIdParam);
-    console.log('Loading job titles for area:', areaIdParam);
-
     try {
-      const jobTitles = await this.competencyService.getJobTitlesByArea(areaIdParam);
-      console.log('Job titles loaded:', jobTitles);
-      this.jobTitles.set(jobTitles);
+      const jobTitles = await this.competencyService.getJobTitlesByArea(areaId);
+      this.jobTitles.set(
+        jobTitles.map((jobTitle) => ({
+          ...jobTitle,
+          name:
+            jobTitle.name ??
+            (jobTitle as any).title ??
+            (jobTitle as any).job_title ??
+            ''
+        }))
+      );
     } catch (error) {
       console.error('Error loading job titles:', error);
     }
@@ -49,23 +59,23 @@ export class JobTitlePage {
   selectJobTitle(jobTitle: JobTitle): void {
     this.selectedJobTitleId.set(jobTitle.id);
     this.competencyService.selectJobTitle(jobTitle.id);
+    this.selectionService.setSelectedJobId(jobTitle.id);
   }
 
   proceedToSkillsEvaluation(): void {
-    if (!this.selectedJobTitleId() || !this.areaId()) {
+    if (!this.selectedJobTitleId() || !this.areaId) {
       return;
     }
 
-    // Navigate to skills evaluation page with both area ID and job title ID
     this.router.navigate(['/skills-evaluation'], {
       queryParams: {
-        areaId: this.areaId(),
+        areaId: this.areaId,
         jobTitleId: this.selectedJobTitleId()
       }
     });
   }
 
   goBack(): void {
-    this.router.navigate(['/competency-areas']);
+    this.router.navigate(['/choice-area']);
   }
 }

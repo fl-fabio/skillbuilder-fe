@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
 import { ErrorPage } from './pages/error-page/error-page';
 import { LoginPage } from './pages/login-page/login-page';
 import { RegisterPage } from './pages/register-page/register-page';
 import { ChoiceAreaPage } from './pages/choice-area/choice-area';
 import { JobTitlePage } from './pages/job-title-page/job-title-page';
+import { ProfileEditPage } from './profile/pages/profile-edit-page/profile-edit-page';
 
 
 export const routes: Routes = [
@@ -15,23 +17,33 @@ export const routes: Routes = [
   },
   {
     path: 'login',
+    canActivate: [guestGuard],
     component: LoginPage
   },
   {
     path: 'register',
+    canActivate: [guestGuard],
     component: RegisterPage
   },
-    {
+  {
     path: 'choice-area',
-    canActivate: [guestGuard],
+    canActivate: [authGuard],
     component: ChoiceAreaPage
   },
   {
-    path: 'job-title/:areaId',
+    path: 'job-title',
+    canActivate: [authGuard],
     component: JobTitlePage
   },
   {
+    path: 'profile',
+    canActivate: [authGuard],
+    component: ProfileEditPage
+  },
+
+  {
     path: 'users',
+    canActivate: [authGuard],
     loadChildren: () =>
       import('./routes/users.routes').then((m) => m.USERS_ROUTES)
   },
