@@ -1,0 +1,66 @@
+<div class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2>Informativa sul Trattamento dei Dati Personali</h2>
+      <p class="user-subtitle">Utente: Fabio Lanzafame</p>
+    </div>
+    
+    <div class="modal-body">
+      <p>
+        Ai sensi del Regolamento (UE) 2016/679 (“GDPR”), si informa che i dati personali forniti
+        dall’utente saranno trattati nel rispetto dei principi di liceità, correttezza, trasparenza e tutela della
+        riservatezza.
+      </p>
+      
+      <h3>1. Titolare del trattamento</h3>
+      <p>Il Titolare del trattamento è [Nome dell’ente/azienda], con sede in [indirizzo], contattabile all’indirizzo email [email].</p>
+      
+      <h3>2. Finalità del trattamento</h3>
+      <p>I dati personali raccolti saranno trattati esclusivamente per finalità di orientamento formativo, ovvero per:</p>
+      <ul>
+        <li>analizzare il profilo dello studente</li>
+        <li>individuare e proporre corsi di formazione coerenti con le esigenze espresse</li>
+      </ul>
+      
+      <h3>3. Base giuridica del trattamento</h3>
+      <p>Il trattamento si basa sul consenso esplicito dell’interessato, ai sensi dell’art. 6, par. 1, lett. a) del GDPR.</p>
+      
+      <h3>4. Modalità del trattamento</h3>
+      <p>I dati saranno trattati con strumenti informatici e/o cartacei, adottando misure tecniche e organizzative adeguate a garantirne la sicurezza e la riservatezza.</p>
+      
+      <h3>5. Natura del conferimento</h3>
+      <p>Il conferimento dei dati è facoltativo, ma il mancato consenso comporterà l’impossibilità di fornire un servizio di orientamento personalizzato.</p>
+      
+      <h3>6. Comunicazione e diffusione dei dati</h3>
+      <p>I dati personali non saranno venduti, ceduti o diffusi a terzi per finalità commerciali. Potranno essere condivisi esclusivamente con soggetti incaricati del trattamento per le finalità sopra indicate.</p>
+      
+      <h3>7. Periodo di conservazione</h3>
+      <p>I dati saranno conservati per il tempo strettamente necessario al raggiungimento delle finalità indicate e, comunque, non oltre [specificare periodo, es. 12 mesi], salvo obblighi di legge.</p>
+      
+      <h3>8. Diritti dell’interessato</h3>
+      <p>L’interessato ha il diritto di:</p>
+      <ul>
+        <li>accedere ai propri dati personali</li>
+        <li>richiederne la rettifica o la cancellazione</li>
+        <li>limitare o opporsi al trattamento</li>
+        <li>revocare il consenso in qualsiasi momento</li>
+        <li>proporre reclamo all’Autorità Garante per la protezione dei dati personali</li>
+      </ul>
+    </div>
+    
+    <div class="modal-footer">
+      <div class="consent-section">
+        <label class="checkbox-container">
+          <input type="checkbox" [(ngModel)]="accepted">
+          <span class="consent-text">
+            Dichiaro di aver letto l’informativa sulla privacy e acconsento al trattamento dei miei dati personali per le finalità indicate.
+          </span>
+        </label>
+      </div>
+      
+      <button class="btn-primary" [disabled]="!accepted">
+        Accedi alla Dashboard
+      </button>
+    </div>
+  </div>
+</div>
