@@ -36,9 +36,21 @@ export class ProfileEditPage {
   readonly hasProfile = signal(false);
   readonly errorMessage = signal('');
   readonly successMessage = signal('');
-  readonly privacyOptions: ReadonlyArray<{ value: PrivacyLevel; label: string }> = [
-    { value: '1', label: 'Livello 1' },
-    { value: '2', label: 'Livello 2' }
+  readonly privacyOptions: ReadonlyArray<{
+    value: PrivacyLevel;
+    label: string;
+    description: string;
+  }> = [
+    {
+      value: '1',
+      label: 'Consenso base',
+      description: 'Utilizziamo solo i dati necessari al funzionamento del servizio.'
+    },
+    {
+      value: '2',
+      label: 'Consenso avanzato',
+      description: 'Consenti l’utilizzo dei dati per analisi e miglioramenti del servizio.'
+    }
   ];
   readonly form: ProfileForm = new FormGroup({
     name: new FormControl('', {
@@ -164,7 +176,7 @@ export class ProfileEditPage {
       const privacyLevel = rawValue.privacyLevel;
 
       if (!isPrivacyLevel(privacyLevel)) {
-        this.errorMessage.set('Seleziona un livello privacy valido.');
+        this.errorMessage.set('Seleziona un consenso privacy valido.');
         this.form.enable();
         this.isSubmitting.set(false);
         return;
