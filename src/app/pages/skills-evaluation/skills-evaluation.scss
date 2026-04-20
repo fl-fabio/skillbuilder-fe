@@ -295,6 +295,11 @@ $content-width: 1240px;
   }
 }
 
+.action-error {
+  color: #b91c1c !important;
+  font-weight: 600;
+}
+
 .action-buttons {
   display: flex;
   align-items: center;
@@ -343,6 +348,13 @@ $content-width: 1240px;
 
   &.enabled {
     animation: button-ready 0.28s ease;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.75;
+    transform: none;
+    box-shadow: 0 10px 24px rgba(18, 98, 164, 0.18);
   }
 }
 

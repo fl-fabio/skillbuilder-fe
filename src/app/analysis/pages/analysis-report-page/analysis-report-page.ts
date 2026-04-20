@@ -9,6 +9,7 @@ import {
 import { AnalysisService } from '../../services/analysis.service';
 import { AuthStorageService } from '../../../core/services/auth-storage.service';
 import { getUserIdFromToken } from '../../../core/utils/jwt.utils';
+import { AnalysisStateService } from '../../services/analysis-state.service';
 
 @Component({
   selector: 'app-analysis-report-page',
@@ -19,6 +20,7 @@ import { getUserIdFromToken } from '../../../core/utils/jwt.utils';
 })
 export class AnalysisReportPage {
   private readonly analysisService = inject(AnalysisService);
+  private readonly analysisStateService = inject(AnalysisStateService);
   private readonly authStorage = inject(AuthStorageService);
   private readonly router = inject(Router);
 
@@ -37,6 +39,14 @@ export class AnalysisReportPage {
   );
 
   async ngOnInit(): Promise<void> {
+    const submittedAnalysis = this.analysisStateService.submittedAnalysis();
+
+    if (submittedAnalysis) {
+      this.report.set(submittedAnalysis);
+      this.isLoading.set(false);
+      return;
+    }
+
     const token = this.authStorage.getToken();
 
     if (!token) {
@@ -47,6 +57,7 @@ export class AnalysisReportPage {
     try {
       const userId = getUserIdFromToken(token);
       const response = await firstValueFrom(this.analysisService.getAnalysis(userId));
+      this.analysisStateService.setSubmittedAnalysis(response);
       this.report.set(response);
     } catch (error) {
       if (isTokenError(error)) {

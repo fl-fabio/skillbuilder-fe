@@ -1,9 +1,13 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { SelectionService } from '../../services/selection.service';
 import { SkillsEvaluationService } from '../../services/skills-evaluation.service';
 import { Router } from '@angular/router';
 import { Skill, SkillType } from '../../models/skill.model';
-import { AuthService } from '../../services/auth.service';
+import { AuthStorageService } from '../../core/services/auth-storage.service';
+import { getUserIdFromToken } from '../../core/utils/jwt.utils';
+import { AnalysisService } from '../../analysis/services/analysis.service';
+import { AnalysisStateService } from '../../analysis/services/analysis-state.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-skills-evaluation',
@@ -13,13 +17,16 @@ import { AuthService } from '../../services/auth.service';
 })
 export class SkillsEvaluation implements OnInit {
   private _router = inject(Router);
+  private readonly authStorage = inject(AuthStorageService);
+  private readonly analysisService = inject(AnalysisService);
+  private readonly analysisStateService = inject(AnalysisStateService);
   selectionService = inject(SelectionService);
   skillsService = inject(SkillsEvaluationService);
-  authService = inject(AuthService);
 
   selectedAreaId = this.selectionService.selectedAreaId;
   selectedJobId = this.selectionService.selectedJobId;
-  userInformation = this.authService.userInformation;
+  readonly submitError = signal<string | null>(null);
+  readonly isSubmitting = signal(false);
 
   groupedSkills = () => this.computeGroupedSkills();
 
@@ -54,17 +61,52 @@ export class SkillsEvaluation implements OnInit {
     this._router.navigate(['/job-title']);
   }
 
-  submit() {
-    const token = localStorage.getItem('auth.access_token');
-    const user = this.authService.decodeTokenAndSetUser(token!);
-    const skillSubmitted = this.skillsService.mapConfig(
-        this.userInformation()!.user_id,
+  async submit(): Promise<void> {
+    this.submitError.set(null);
+
+    const token = this.authStorage.getToken();
+
+    if (!token) {
+      await this._router.navigate(['/login']);
+      return;
+    }
+
+    const areaId = this.selectedAreaId();
+    const jobId = this.selectedJobId();
+
+    if (!areaId || !jobId) {
+      this.submitError.set('Seleziona di nuovo area e ruolo prima di inviare la valutazione.');
+      return;
+    }
+
+    try {
+      const userId = getUserIdFromToken(token);
+      const payload = this.skillsService.buildSubmitPayload(
+        userId,
         this.skills(),
-        this.selectedAreaId()!,
-        this.selectedJobId()!
-    )
-    console.log('Submitted skills evaluation:', this.skills());
-    console.log('User Config', skillSubmitted);
+        areaId,
+        jobId
+      );
+
+      this.isSubmitting.set(true);
+      const response = await firstValueFrom(this.analysisService.submitUserSkills(payload));
+
+      this.analysisStateService.setSubmittedAnalysis(response);
+      await this._router.navigate(['/analysis-report']);
+    } catch (error) {
+      if (isTokenError(error)) {
+        this.authStorage.clearSession();
+        await this._router.navigate(['/login']);
+        return;
+      }
+
+      console.error('Error submitting skills evaluation:', error);
+      this.submitError.set(
+        'Non siamo riusciti a salvare la tua valutazione. Riprova tra qualche istante.'
+      );
+    } finally {
+      this.isSubmitting.set(false);
+    }
   }
 
   private getTypeLabel(type: SkillType): string {
@@ -104,4 +146,8 @@ export class SkillsEvaluation implements OnInit {
       }));
   }
 
+}
+
+function isTokenError(error: unknown): boolean {
+  return error instanceof Error && error.message === 'User ID not found in token';
 }
