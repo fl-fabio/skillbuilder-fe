@@ -8,16 +8,3 @@ export interface Skill {
     weight: number;
     user_score?: number;
 }
-
-export interface UserConfig {
-    user_id: string;
-    target: {
-        area_id: string;
-        job_id: number;
-    };
-    consent_level: number;
-    skills: {
-        skill_id: number;
-        user_level: number;
-    }[];
-}

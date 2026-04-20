@@ -102,6 +102,10 @@
           <p>
             Dopo la valutazione delle skill sarà possibile generare il report finale del profilo.
           </p>
+
+          @if (submitError()) {
+            <p class="action-error">{{ submitError() }}</p>
+          }
         </div>
 
         <div class="action-buttons">
@@ -109,8 +113,13 @@
             Indietro
           </button>
 
-          <button class="primary-btn enabled" type="button" (click)="submit()">
-            Procedi al report
+          <button
+            class="primary-btn enabled"
+            type="button"
+            [disabled]="isSubmitting()"
+            (click)="submit()"
+          >
+            {{ isSubmitting() ? 'Invio in corso...' : 'Procedi al report' }}
           </button>
         </div>
       </div>
