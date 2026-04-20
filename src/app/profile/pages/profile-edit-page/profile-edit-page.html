@@ -15,17 +15,39 @@
 
     <section class="profile-card">
       @if (isLoading()) {
-        <div class="state-card">Caricamento profilo...</div>
+        <div class="state-card loading-state" aria-busy="true" aria-live="polite">
+          <div class="state-copy">
+            <h2>Caricamento profilo</h2>
+            <p>Stiamo recuperando i tuoi dati dal server.</p>
+          </div>
+
+          <div class="skeleton-grid" aria-hidden="true">
+            <span class="skeleton-block skeleton-block-title"></span>
+            <span class="skeleton-block"></span>
+            <span class="skeleton-block"></span>
+            <span class="skeleton-block"></span>
+            <span class="skeleton-block skeleton-block-short"></span>
+          </div>
+        </div>
       } @else if (!hasProfile()) {
         <div class="state-card error" role="alert">
-          {{ errorMessage() || 'Profilo non disponibile.' }}
+          <div class="state-copy">
+            <h2>Profilo non disponibile</h2>
+            <p>{{ errorMessage() || 'Non è stato possibile caricare il profilo. Riprova più tardi.' }}</p>
+          </div>
+
+          <div class="state-actions">
+            <button class="retry-button" type="button" (click)="onRetryLoad()">
+              Riprova
+            </button>
+          </div>
         </div>
       } @else {
         <form class="profile-form" [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="card-head">
             <div>
               <h2>I tuoi dati</h2>
-              <p>Nome, email ed eta vengono sincronizzati con il tuo account backend.</p>
+              <p>Nome, cognome, email e livello privacy vengono sincronizzati con il tuo account backend.</p>
             </div>
           </div>
 
@@ -57,6 +79,20 @@
             </div>
 
             <div class="field-group">
+              <label class="field-label" for="surname">Cognome</label>
+              <input
+                id="surname"
+                type="text"
+                formControlName="surname"
+                placeholder="Inserisci il tuo cognome"
+                autocomplete="family-name"
+              />
+              @if (surnameControl.touched && surnameControl.hasError('required')) {
+                <p class="field-error">Inserisci il cognome.</p>
+              }
+            </div>
+
+            <div class="field-group">
               <label class="field-label" for="email">Email</label>
               <input
                 id="email"
@@ -74,20 +110,18 @@
             </div>
 
             <div class="field-group">
-              <label class="field-label" for="age">Eta</label>
-              <input
-                id="age"
-                type="number"
-                min="0"
-                formControlName="age"
-                placeholder="0"
-                autocomplete="off"
-              />
-              @if (ageControl.touched && ageControl.hasError('required')) {
-                <p class="field-error">Inserisci la tua eta.</p>
-              }
-              @if (ageControl.touched && ageControl.hasError('min')) {
-                <p class="field-error">L'eta deve essere un numero valido e non negativo.</p>
+              <label class="field-label" for="privacyLevel">Livello privacy</label>
+              <select
+                id="privacyLevel"
+                formControlName="privacyLevel"
+              >
+                <option value="" disabled>Seleziona il livello privacy</option>
+                @for (option of privacyOptions; track option.value) {
+                  <option [value]="option.value">{{ option.label }}</option>
+                }
+              </select>
+              @if (privacyLevelControl.touched && privacyLevelControl.hasError('required')) {
+                <p class="field-error">Inserisci il livello privacy.</p>
               }
             </div>
           </div>

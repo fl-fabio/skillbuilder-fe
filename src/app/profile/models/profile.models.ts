@@ -1,15 +1,19 @@
+export type PrivacyLevel = '1' | '2';
+
 export interface UserProfile {
-  id?: string | number;
-  user_id?: string | number;
+  id: string;
   name: string;
+  surname: string;
   email: string;
-  age: number | null;
+  privacy_level: PrivacyLevel;
+  accepted_at?: string;
 }
 
 export interface UpdateUserRequest {
   name: string;
+  surname: string;
   email: string;
-  age: number;
+  privacy_level: PrivacyLevel;
 }
 
 export interface UpdateUserResponse extends UserProfile {

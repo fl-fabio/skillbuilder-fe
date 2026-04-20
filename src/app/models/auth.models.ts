@@ -13,12 +13,14 @@ export interface UserInformation {
   email: string;
 }
 
+export type RegisterPrivacyLevel = '1' | '2';
+
 export interface RegisterRequest {
   name: string;
   surname: string;
   email: string;
   password: string;
-  privacy_level: number;
+  privacy_level: RegisterPrivacyLevel;
 }
 
 export interface RegisterResponse {
@@ -26,5 +28,6 @@ export interface RegisterResponse {
   name: string;
   surname: string;
   email: string;
-  privacy_level: number;
+  privacy_level: RegisterPrivacyLevel;
+  accepted_at?: string | null;
 }
