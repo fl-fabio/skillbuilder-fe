@@ -1,53 +1,85 @@
-<main class="analysis-page">
-  <section class="hero">
+<main class="report-container">
+  <section class="header-section">
     <div>
       <a class="back-link" routerLink="/choice-area">Torna al percorso</a>
-      <span class="eyebrow">Analysis Report</span>
-      <h1>Report finale delle competenze</h1>
-      <p>Analisi generata dai dati reali del backend per il profilo autenticato.</p>
+      <span class="pre-title">Analysis Report</span>
+      <h1 class="main-title">Report finale delle competenze</h1>
+      <p class="subtitle">
+        Una sintesi chiara del tuo posizionamento rispetto al ruolo selezionato,
+        costruita con i dati reali restituiti dall’analisi.
+      </p>
     </div>
   </section>
 
   @if (isLoading()) {
-    <section class="state-card">Caricamento analisi in corso...</section>
+    <section class="state-card loading-card">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Caricamento analisi in corso...</p>
+    </section>
   } @else if (errorMessage()) {
-    <section class="state-card error">{{ errorMessage() }}</section>
+    <section class="state-card error-card">
+      {{ errorMessage() }}
+    </section>
   } @else if (analysis(); as data) {
-    <section class="overview-grid">
-      <article class="panel header-panel">
-        <span class="panel-label">Ruolo target</span>
+    <section class="hero-grid">
+      <article class="info-panel">
+        <span class="section-label">Target</span>
         <h2>{{ data.target.job_title }}</h2>
+        <p class="panel-copy">
+          Il report riassume il match tra il tuo profilo attuale e il percorso
+          richiesto nell’area selezionata.
+        </p>
+        <p class="report-meta">
+          Area {{ data.target.area_name }}
+          <span class="report-meta-separator">•</span>
+          Generato il {{ formatTimestamp(data.analysis.timestamp) }}
+        </p>
 
-        <div class="meta-grid">
-          <div class="meta-item">
-            <span>Area</span>
-            <strong>{{ data.target.area_name }}</strong>
-          </div>
-
-          <div class="meta-item">
-            <span>Timestamp</span>
-            <strong>{{ formatTimestamp(data.metadata.timestamp) }}</strong>
-          </div>
+        <div class="target-highlight">
+          <span class="target-highlight-label">Area di riferimento</span>
+          <strong>{{ data.target.area_name }}</strong>
         </div>
       </article>
 
-      <article class="panel kpi-panel">
-        <div class="kpi-card">
-          <span class="panel-label">Coverage score</span>
-          <strong>{{ formatCoverageScore(data.summary.coverage_score) }}</strong>
+      <article class="kpi-panel" [class.coverage-critical]="coverageTone() === 'critical'" [class.coverage-warning]="coverageTone() === 'warning'" [class.coverage-good]="coverageTone() === 'good'">
+        <div class="kpi-topline">
+          <div class="kpi-heading">
+            <span class="section-label">KPI</span>
+            <h3>Coverage score</h3>
+          </div>
         </div>
 
-        <div class="kpi-card">
-          <span class="panel-label">Compatibility</span>
-          <span class="compatibility-badge">{{ data.summary.compatibility }}</span>
+        <div class="kpi-layout">
+          <div class="chart-shell">
+            <div class="chart-frame">
+              <ag-charts class="coverage-chart" [options]="coverageChartOptions()"></ag-charts>
+            </div>
+          </div>
+
+          <div class="kpi-copy">
+            <div class="kpi-stat executive-card">
+              <span>Copertura complessiva</span>
+              <strong>{{ formatCoverageScore(data.summary.coverage_score) }}</strong>
+            </div>
+
+            <div
+              class="kpi-detail executive-card compatibility-card"
+              [class.compatibility-critical]="compatibilityTone(data.summary.compatibility) === 'critical'"
+              [class.compatibility-warning]="compatibilityTone(data.summary.compatibility) === 'warning'"
+              [class.compatibility-good]="compatibilityTone(data.summary.compatibility) === 'good'"
+            >
+              <span>Compatibilità</span>
+              <p>{{ data.summary.compatibility }}</p>
+            </div>
+          </div>
         </div>
       </article>
     </section>
 
-    <section class="panel">
+    <section class="content-panel">
       <div class="section-heading">
         <div>
-          <span class="panel-label">Skills</span>
+          <span class="section-label">Skills</span>
           <h3>Mappatura delle competenze</h3>
         </div>
       </div>
@@ -63,20 +95,38 @@
               [class.gap-warning]="gapTone(skill.gap_pct) === 'warning'"
               [class.gap-good]="gapTone(skill.gap_pct) === 'good'"
             >
-              <div class="skill-header">
+              <div class="skill-card-header">
                 <h4>{{ skill.skill_name }}</h4>
                 <span class="gap-pill">{{ formatPercentage(skill.gap_pct) }} gap</span>
               </div>
 
-              <div class="metric-grid">
-                <div>
-                  <span>User level</span>
-                  <strong>{{ formatPercentage(skill.user_level_pct) }}</strong>
+              <div class="metric-stack">
+                <div class="metric-row">
+                  <div class="metric-copy">
+                    <span>User level</span>
+                    <strong>{{ formatPercentage(skill.user_level_pct) }}</strong>
+                  </div>
+
+                  <div class="meter-track" aria-hidden="true">
+                    <span class="meter-fill user-fill" [style.width]="formatPercentage(skill.user_level_pct)"></span>
+                  </div>
                 </div>
 
-                <div>
-                  <span>Gap</span>
-                  <strong>{{ formatPercentage(skill.gap_pct) }}</strong>
+                <div class="metric-row">
+                  <div class="metric-copy">
+                    <span>Gap</span>
+                    <strong>{{ formatPercentage(skill.gap_pct) }}</strong>
+                  </div>
+
+                  <div class="meter-track" aria-hidden="true">
+                    <span
+                      class="meter-fill"
+                      [class.gap-fill-critical]="gapTone(skill.gap_pct) === 'critical'"
+                      [class.gap-fill-warning]="gapTone(skill.gap_pct) === 'warning'"
+                      [class.gap-fill-good]="gapTone(skill.gap_pct) === 'good'"
+                      [style.width]="formatPercentage(skill.gap_pct)"
+                    ></span>
+                  </div>
                 </div>
               </div>
             </article>
@@ -85,10 +135,10 @@
       }
     </section>
 
-    <section class="panel">
+    <section class="content-panel">
       <div class="section-heading">
         <div>
-          <span class="panel-label">Training Priorities</span>
+          <span class="section-label">Training Priorities</span>
           <h3>Top 5 priorità formative</h3>
         </div>
       </div>
@@ -97,14 +147,16 @@
         <div class="empty-card">Nessuna priorità formativa disponibile.</div>
       } @else {
         <div class="priority-list">
-          @for (priority of topTrainingPriorities(); track priority.skill_name) {
+          @for (priority of topTrainingPriorities(); track priority.skill_name; let index = $index) {
             <article
               class="priority-card"
               [class.gap-critical]="gapTone(priority.gap_pct) === 'critical'"
               [class.gap-warning]="gapTone(priority.gap_pct) === 'warning'"
               [class.gap-good]="gapTone(priority.gap_pct) === 'good'"
             >
-              <div>
+              <div class="priority-rank">#{{ index + 1 }}</div>
+
+              <div class="priority-main">
                 <h4>{{ priority.skill_name }}</h4>
                 <p>Priority score {{ formatPriorityScore(priority.priority_score) }}</p>
               </div>
@@ -118,7 +170,10 @@
         </div>
       }
     </section>
+
   } @else {
-    <section class="state-card error">Impossibile caricare l’analisi. Riprova più tardi.</section>
+    <section class="state-card error-card">
+      Impossibile caricare l’analisi. Riprova più tardi.
+    </section>
   }
 </main>
