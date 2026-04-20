@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -7,8 +7,19 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './privacy-modal.component.html',
-  styleUrls: ['./privacy-modal.component.scss']
+  styleUrl: './privacy-modal.component.scss'
 })
 export class PrivacyModalComponent {
-  accepted: boolean = false;
+  @Input() isVisible: boolean = false;
+  @Input() accepted: boolean = false;
+  @Output() acceptedChange = new EventEmitter<boolean>();
+  @Output() closeRequest = new EventEmitter<void>();
+
+  onToggleAccepted(value: boolean): void {
+    this.acceptedChange.emit(value);
+  }
+
+  onClose(): void {
+    this.closeRequest.emit();
+  }
 }

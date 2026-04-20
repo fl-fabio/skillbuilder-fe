@@ -97,13 +97,29 @@
               type="checkbox"
               formControlName="privacyAccepted"
               [disabled]="isSubmitting()"
+              (click)="onCheckboxClick($event)"
             />
-            <span>Accetto i termini dell'informativa sulla Privacy</span>
+            <span>
+              Accetto i termini dell'
+              <button 
+                type="button" 
+                class="privacy-link-btn" 
+                (click)="togglePrivacyModal(true)">
+                informativa sulla Privacy
+              </button>
+            </span>
           </label>
           @if (privacyAcceptedControl.touched && privacyAcceptedControl.hasError('required')) {
-            <p class="field-error">Devi accettare l'informativa sulla Privacy.</p>
+            <p class="field-error">Devi accettare l'informativa sulla Privacy per registrarti.</p>
           }
         </div>
+
+        <app-privacy-modal 
+          [isVisible]="isPrivacyModalVisible()" 
+          [accepted]="privacyAcceptedControl.value"
+          (acceptedChange)="onPrivacyAccepted($event)"
+          (closeRequest)="togglePrivacyModal(false)">
+        </app-privacy-modal>
 
         @if (errorMessage()) {
           <div class="submit-error" role="alert">

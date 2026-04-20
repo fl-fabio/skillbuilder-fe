@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom, TimeoutError } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { RegisterRequest } from '../../models/auth.models';
+import { PrivacyModalComponent } from '../../components/privacy-modal/privacy-modal.component';
 
 type RegisterForm = FormGroup<{
   name: FormControl<string>;
@@ -17,7 +18,7 @@ type RegisterForm = FormGroup<{
 @Component({
   selector: 'app-register-page',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, PrivacyModalComponent],
   templateUrl: './register-page.html',
   styleUrl: '../login-page/login-page.scss'
 })
@@ -27,6 +28,7 @@ export class RegisterPage {
 
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal('');
+  readonly isPrivacyModalVisible = signal(false);
   readonly form: RegisterForm = new FormGroup({
     name: new FormControl('', {
       nonNullable: true,
@@ -68,6 +70,25 @@ export class RegisterPage {
 
   get privacyAcceptedControl(): FormControl<boolean> {
     return this.form.controls.privacyAccepted;
+  }
+
+  togglePrivacyModal(show: boolean): void {
+    this.isPrivacyModalVisible.set(show);
+  }
+
+  onCheckboxClick(event: Event): void {
+    event.preventDefault();
+    if (this.privacyAcceptedControl.value) {
+      // Se è già accettato, permettiamo di rimuovere il consenso direttamente
+      this.privacyAcceptedControl.setValue(false);
+    } else {
+      // Se non è accettato, forziamo l'apertura della modale
+      this.togglePrivacyModal(true);
+    }
+  }
+
+  onPrivacyAccepted(value: boolean): void {
+    this.form.controls.privacyAccepted.setValue(value);
   }
 
   async onSubmit(): Promise<void> {

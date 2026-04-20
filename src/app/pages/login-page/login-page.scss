@@ -211,8 +211,23 @@ input:disabled {
 }
 
 .forgot-link:hover,
-.footer-link:hover {
+.footer-link:hover,
+.privacy-link-btn:hover {
   color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.privacy-link-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #2563eb;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: inherit;
+  font-size: inherit;
+  transition: color 0.2s ease;
 }
 
 .field-error {
