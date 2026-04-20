@@ -3,14 +3,15 @@ export interface GapAnalysisResponse {
 }
 
 export interface AnalysisContainer {
-  metadata: AnalysisMetadata;
+  analysis: AnalysisRecord;
   target: AnalysisTarget;
   summary: AnalysisSummary;
   skills: AnalysisSkill[];
   training_priorities: TrainingPriority[];
 }
 
-export interface AnalysisMetadata {
+export interface AnalysisRecord {
+  id: string | number;
   timestamp: string;
 }
 
