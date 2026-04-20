@@ -3,6 +3,7 @@ import { SelectionService } from '../../services/selection.service';
 import { SkillsEvaluationService } from '../../services/skills-evaluation.service';
 import { Router } from '@angular/router';
 import { Skill, SkillType } from '../../models/skill.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-skills-evaluation',
@@ -14,9 +15,11 @@ export class SkillsEvaluation implements OnInit {
   private _router = inject(Router);
   selectionService = inject(SelectionService);
   skillsService = inject(SkillsEvaluationService);
+  authService = inject(AuthService);
 
   selectedAreaId = this.selectionService.selectedAreaId;
   selectedJobId = this.selectionService.selectedJobId;
+  userInformation = this.authService.userInformation;
 
   groupedSkills = () => this.computeGroupedSkills();
 
@@ -52,7 +55,16 @@ export class SkillsEvaluation implements OnInit {
   }
 
   submit() {
+    const token = localStorage.getItem('auth.access_token');
+    const user = this.authService.decodeTokenAndSetUser(token!);
+    const skillSubmitted = this.skillsService.mapConfig(
+        this.userInformation()!.user_id,
+        this.skills(),
+        this.selectedAreaId()!,
+        this.selectedJobId()!
+    )
     console.log('Submitted skills evaluation:', this.skills());
+    console.log('User Config', skillSubmitted);
   }
 
   private getTypeLabel(type: SkillType): string {
