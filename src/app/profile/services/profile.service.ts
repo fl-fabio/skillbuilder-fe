@@ -26,7 +26,7 @@ export class ProfileService {
       throw new Error('Missing auth token');
     }
 
-    const requestUrl = this.buildUrl(`/auth/${userId}`);
+    const requestUrl = this.buildProfileUrl(userId);
 
     return this.http
       .get<UserProfileApiResponse>(requestUrl, {
@@ -40,29 +40,27 @@ export class ProfileService {
     payload: UpdateUserRequest,
     token: string
   ): Observable<UpdateUserResponse> {
-    const requestUrl = this.buildUrl(`/users/${userId}`);
-
-    console.log('Final userId used:', userId);
-    console.log('Profile request URL:', requestUrl);
+    const requestUrl = this.buildProfileUrl(userId);
 
     return this.http
-      .put<UpdateUserResponse>(requestUrl, payload, {
+      .put<UserProfileApiResponse>(requestUrl, payload, {
         headers: this.createHeaders(token)
       })
-      .pipe(this.applyRequestPolicy());
+      .pipe(this.applyRequestPolicy(), map((response) => this.mapUserProfile(response)));
   }
 
   deleteProfile(userId: string, token: string): Observable<DeleteUserResponse> {
-    const requestUrl = this.buildUrl(`/users/${userId}`);
-
-    console.log('Final userId used:', userId);
-    console.log('Profile request URL:', requestUrl);
+    const requestUrl = this.buildProfileUrl(userId);
 
     return this.http
       .delete<DeleteUserResponse>(requestUrl, {
         headers: this.createHeaders(token)
       })
       .pipe(this.applyRequestPolicy());
+  }
+
+  private buildProfileUrl(userId: string): string {
+    return this.buildUrl(`/auth/${userId}`);
   }
 
   private buildUrl(path: string): string {
@@ -121,7 +119,9 @@ export class ProfileService {
       typeof candidate['surname'] === 'string' &&
       typeof candidate['email'] === 'string' &&
       this.isPrivacyLevel(candidate['privacy_level']) &&
-      (candidate['accepted_at'] === undefined || typeof candidate['accepted_at'] === 'string')
+      (candidate['accepted_at'] === undefined ||
+        candidate['accepted_at'] === null ||
+        typeof candidate['accepted_at'] === 'string')
     );
   }
 
@@ -136,5 +136,5 @@ interface UserProfileApiResponse {
   surname: string;
   email: string;
   privacy_level: PrivacyLevel;
-  accepted_at?: string;
+  accepted_at?: string | null;
 }

@@ -6,7 +6,7 @@ export interface UserProfile {
   surname: string;
   email: string;
   privacy_level: PrivacyLevel;
-  accepted_at?: string;
+  accepted_at?: string | null;
 }
 
 export interface UpdateUserRequest {
