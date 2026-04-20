@@ -114,13 +114,6 @@
           }
         </div>
 
-        <app-privacy-modal 
-          [isVisible]="isPrivacyModalVisible()" 
-          [accepted]="privacyAcceptedControl.value"
-          (acceptedChange)="onPrivacyAccepted($event)"
-          (closeRequest)="togglePrivacyModal(false)">
-        </app-privacy-modal>
-
         @if (errorMessage()) {
           <div class="submit-error" role="alert">
             {{ errorMessage() }}
@@ -136,6 +129,13 @@
           }
         </button>
       </form>
+
+      <app-privacy-modal 
+        [isVisible]="isPrivacyModalVisible()" 
+        [accepted]="privacyAcceptedControl.value"
+        (acceptedChange)="onPrivacyAccepted($event)"
+        (closeRequest)="togglePrivacyModal(false)">
+      </app-privacy-modal>
 
       <footer class="auth-footer">
         <span>Serve aiuto?</span>
