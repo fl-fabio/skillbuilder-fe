@@ -8,13 +8,14 @@ import {
   RegisterResponse,
   UserInformation
 } from '../models/auth.models';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly http = inject(HttpClient);
-  private readonly apiBaseUrl = 'http://82.165.174.28/api';
+  private readonly apiBaseUrl = environment.apiBaseUrl;
   private readonly jsonHeaders = new HttpHeaders({
     'Content-Type': 'application/json'
   });

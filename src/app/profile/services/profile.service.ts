@@ -9,6 +9,7 @@ import {
   UpdateUserResponse,
   UserProfile
 } from '../models/profile.models';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ import {
 export class ProfileService {
   private readonly http = inject(HttpClient);
   private readonly authStorage = inject(AuthStorageService);
-  private readonly apiBaseUrl = 'http://82.165.174.28/api';
+  private readonly apiBaseUrl = environment.apiBaseUrl;
 
   async getCurrentUser(): Promise<UserProfile> {
     const token = this.authStorage.getToken();
