@@ -8,6 +8,11 @@ export interface LoginResponse {
   token_type: string;
 }
 
+export interface UserInformation {
+  user_id: string;
+  email: string;
+}
+
 export interface RegisterRequest {
   name: string;
   surname: string;

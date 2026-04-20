@@ -59,6 +59,7 @@ export class LoginPage {
       const response = await firstValueFrom(this.authService.login(payload));
 
       this.authStorage.saveToken(response.access_token);
+      this.authService.decodeTokenAndSetUser(response.access_token);
       await this.router.navigate(['/choice-area']);
     } catch (error) {
       this.errorMessage.set(mapLoginError(error));

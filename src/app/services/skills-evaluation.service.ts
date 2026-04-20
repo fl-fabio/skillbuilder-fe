@@ -1,7 +1,8 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Skill } from '../models/skill.model';
+import { Skill, UserConfig } from '../models/skill.model';
 import { firstValueFrom } from 'rxjs';
 import { SkillsEvaluationApiService } from './skills-evaluation.api.service';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -48,5 +49,25 @@ export class SkillsEvaluationService {
     );
 
     this.skills.set(updated);
+  }
+
+  public mapConfig(userId: string, skillsArray: Skill[], areaId: string, jobId: string): UserConfig {
+    const user_id = userId;
+    const target = {
+      area_id: areaId,
+      job_id: +jobId
+    };
+    const consent_level = 1;
+    const skills = skillsArray.map(skill => ({
+      skill_id: +skill.id,
+      user_level: skill.user_score!
+    }));
+  
+    return {
+      user_id,
+      target,
+      consent_level,
+      skills
+    };
   }
 }
