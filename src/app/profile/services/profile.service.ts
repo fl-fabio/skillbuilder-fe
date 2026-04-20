@@ -1,10 +1,10 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { firstValueFrom, Observable, retry, throwError, timeout, timer } from 'rxjs';
+import { map, Observable, retry, throwError, timeout, timer } from 'rxjs';
 import { AuthStorageService } from '../../core/services/auth-storage.service';
-import { getEmailFromToken } from '../../core/utils/jwt.utils';
 import {
   DeleteUserResponse,
+  PrivacyLevel,
   UpdateUserRequest,
   UpdateUserResponse,
   UserProfile
@@ -19,53 +19,20 @@ export class ProfileService {
   private readonly authStorage = inject(AuthStorageService);
   private readonly apiBaseUrl = environment.apiBaseUrl;
 
-  async getCurrentUser(): Promise<UserProfile> {
+  getUserProfile(userId: string): Observable<UserProfile> {
     const token = this.authStorage.getToken();
 
     if (!token) {
       throw new Error('Missing auth token');
     }
 
-    const usersUrl = this.buildUrl('/users');
-    const maskedToken = this.maskToken(token);
-    const email = getEmailFromToken(token);
-
-    console.log('Profile token:', maskedToken);
-    console.log('Extracted email:', email);
-    console.log('Profile request URL:', usersUrl);
-
-    const users = await firstValueFrom(
-      this.http
-        .get<UserProfile[]>(usersUrl, {
-          headers: this.createHeaders(token)
-        })
-        .pipe(this.applyRequestPolicy())
-    );
-
-    console.log('Users list:', users);
-
-    const user = users.find((currentUser) => currentUser.email === email);
-
-    console.log('Matched user:', user);
-
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    return user;
-  }
-
-  getProfile(userId: string, token: string): Observable<UserProfile> {
-    const requestUrl = this.buildUrl(`/users/${userId}`);
-
-    console.log('Final userId used:', userId);
-    console.log('Profile request URL:', requestUrl);
+    const requestUrl = this.buildProfileUrl(userId);
 
     return this.http
-      .get<UserProfile>(requestUrl, {
+      .get<UserProfileApiResponse>(requestUrl, {
         headers: this.createHeaders(token)
       })
-      .pipe(this.applyRequestPolicy());
+      .pipe(this.applyRequestPolicy(), map((response) => this.mapUserProfile(response)));
   }
 
   updateProfile(
@@ -73,29 +40,27 @@ export class ProfileService {
     payload: UpdateUserRequest,
     token: string
   ): Observable<UpdateUserResponse> {
-    const requestUrl = this.buildUrl(`/users/${userId}`);
-
-    console.log('Final userId used:', userId);
-    console.log('Profile request URL:', requestUrl);
+    const requestUrl = this.buildProfileUrl(userId);
 
     return this.http
-      .put<UpdateUserResponse>(requestUrl, payload, {
+      .put<UserProfileApiResponse>(requestUrl, payload, {
         headers: this.createHeaders(token)
       })
-      .pipe(this.applyRequestPolicy());
+      .pipe(this.applyRequestPolicy(), map((response) => this.mapUserProfile(response)));
   }
 
   deleteProfile(userId: string, token: string): Observable<DeleteUserResponse> {
-    const requestUrl = this.buildUrl(`/users/${userId}`);
-
-    console.log('Final userId used:', userId);
-    console.log('Profile request URL:', requestUrl);
+    const requestUrl = this.buildProfileUrl(userId);
 
     return this.http
       .delete<DeleteUserResponse>(requestUrl, {
         headers: this.createHeaders(token)
       })
       .pipe(this.applyRequestPolicy());
+  }
+
+  private buildProfileUrl(userId: string): string {
+    return this.buildUrl(`/auth/${userId}`);
   }
 
   private buildUrl(path: string): string {
@@ -107,14 +72,6 @@ export class ProfileService {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-  }
-
-  private maskToken(token: string): string {
-    if (token.length <= 10) {
-      return '***';
-    }
-
-    return `${token.slice(0, 6)}...${token.slice(-4)}`;
   }
 
   private applyRequestPolicy<T>() {
@@ -133,4 +90,51 @@ export class ProfileService {
         })
       );
   }
+
+  private mapUserProfile(response: UserProfileApiResponse): UserProfile {
+    if (!this.isUserProfileApiResponse(response)) {
+      throw new Error('Invalid profile response');
+    }
+
+    return {
+      id: response.id,
+      name: response.name,
+      surname: response.surname,
+      email: response.email,
+      privacy_level: response.privacy_level,
+      accepted_at: response.accepted_at
+    };
+  }
+
+  private isUserProfileApiResponse(value: unknown): value is UserProfileApiResponse {
+    if (!value || typeof value !== 'object') {
+      return false;
+    }
+
+    const candidate = value as Record<string, unknown>;
+
+    return (
+      typeof candidate['id'] === 'string' &&
+      typeof candidate['name'] === 'string' &&
+      typeof candidate['surname'] === 'string' &&
+      typeof candidate['email'] === 'string' &&
+      this.isPrivacyLevel(candidate['privacy_level']) &&
+      (candidate['accepted_at'] === undefined ||
+        candidate['accepted_at'] === null ||
+        typeof candidate['accepted_at'] === 'string')
+    );
+  }
+
+  private isPrivacyLevel(value: unknown): value is PrivacyLevel {
+    return value === '1' || value === '2';
+  }
+}
+
+interface UserProfileApiResponse {
+  id: string;
+  name: string;
+  surname: string;
+  email: string;
+  privacy_level: PrivacyLevel;
+  accepted_at?: string | null;
 }

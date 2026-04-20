@@ -4,13 +4,15 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom, TimeoutError } from 'rxjs';
 import { AuthStorageService } from '../../../core/services/auth-storage.service';
-import { UpdateUserRequest } from '../../models/profile.models';
+import { getUserIdFromToken } from '../../../core/utils/jwt.utils';
+import { PrivacyLevel, UpdateUserRequest } from '../../models/profile.models';
 import { ProfileService } from '../../services/profile.service';
 
 type ProfileForm = FormGroup<{
   name: FormControl<string>;
+  surname: FormControl<string>;
   email: FormControl<string>;
-  age: FormControl<number | null>;
+  privacyLevel: FormControl<PrivacyLevel | ''>;
 }>;
 
 @Component({
@@ -34,8 +36,28 @@ export class ProfileEditPage {
   readonly hasProfile = signal(false);
   readonly errorMessage = signal('');
   readonly successMessage = signal('');
+  readonly privacyOptions: ReadonlyArray<{
+    value: PrivacyLevel;
+    label: string;
+    description: string;
+  }> = [
+    {
+      value: '1',
+      label: 'Consenso base',
+      description: 'Utilizziamo solo i dati necessari al funzionamento del servizio.'
+    },
+    {
+      value: '2',
+      label: 'Consenso avanzato',
+      description: 'Consenti l’utilizzo dei dati per analisi e miglioramenti del servizio.'
+    }
+  ];
   readonly form: ProfileForm = new FormGroup({
     name: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required]
+    }),
+    surname: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required]
     }),
@@ -43,8 +65,9 @@ export class ProfileEditPage {
       nonNullable: true,
       validators: [Validators.required, Validators.email]
     }),
-    age: new FormControl<number | null>(null, {
-      validators: [Validators.required, Validators.min(0)]
+    privacyLevel: new FormControl<PrivacyLevel | ''>('', {
+      nonNullable: true,
+      validators: [Validators.required]
     })
   });
 
@@ -60,48 +83,72 @@ export class ProfileEditPage {
     return this.form.controls.email;
   }
 
-  get ageControl(): FormControl<number | null> {
-    return this.form.controls.age;
+  get surnameControl(): FormControl<string> {
+    return this.form.controls.surname;
+  }
+
+  get privacyLevelControl(): FormControl<PrivacyLevel | ''> {
+    return this.form.controls.privacyLevel;
   }
 
   async ngOnInit(): Promise<void> {
-    const token = this.authStorage.getToken();
-    console.log('Profile token:', maskTokenForLog(token));
+    this.token = this.authStorage.getToken();
 
-    if (!token) {
+    if (!this.token) {
       await this.router.navigate(['/login']);
       return;
     }
 
-    this.token = token;
+    await this.loadProfile();
+  }
+
+  async onRetryLoad(): Promise<void> {
+    if (this.isLoading()) {
+      return;
+    }
+
+    await this.loadProfile();
+  }
+
+  private async loadProfile(): Promise<void> {
+    if (!this.token) {
+      await this.router.navigate(['/login']);
+      return;
+    }
+
+    this.isLoading.set(true);
+    this.hasProfile.set(false);
+    this.errorMessage.set('');
+    this.successMessage.set('');
+    this.form.disable();
 
     try {
-      const profile = await this.profileService.getCurrentUser();
-      const resolvedUserId = profile.id ?? profile.user_id;
+      const userId = (this.userId ?? getUserIdFromToken(this.token)).trim();
 
-      console.log('Matched user:', profile);
-
-      if (resolvedUserId === undefined || resolvedUserId === null || !String(resolvedUserId).trim()) {
+      if (!userId) {
         this.errorMessage.set('Errore di autenticazione. Effettua nuovamente il login.');
-        this.isLoading.set(false);
         return;
       }
 
-      this.userId = String(resolvedUserId);
-      console.log('Extracted userId:', this.userId);
+      this.userId = userId;
+
+      const profile = await firstValueFrom(this.profileService.getUserProfile(userId));
 
       this.form.reset({
         name: profile.name ?? '',
+        surname: profile.surname ?? '',
         email: profile.email ?? '',
-        age: profile.age ?? null
+        privacyLevel: profile.privacy_level ?? ''
       });
       this.form.enable();
       this.hasProfile.set(true);
     } catch (error) {
-      if (error instanceof Error && error.message === 'User not found') {
-        this.errorMessage.set('Profilo non trovato.');
+      console.error('Failed to load profile:', error);
+
+      if (error instanceof Error && error.message === 'User ID not found in token') {
+        this.errorMessage.set('Errore di autenticazione. Effettua nuovamente il login.');
       } else {
-        this.errorMessage.set(mapProfileError(error));
+        this.errorMessage.set(LOAD_PROFILE_ERROR_MESSAGE);
       }
     } finally {
       this.isLoading.set(false);
@@ -126,10 +173,20 @@ export class ProfileEditPage {
 
     try {
       const rawValue = this.form.getRawValue();
+      const privacyLevel = rawValue.privacyLevel;
+
+      if (!isPrivacyLevel(privacyLevel)) {
+        this.errorMessage.set('Seleziona un consenso privacy valido.');
+        this.form.enable();
+        this.isSubmitting.set(false);
+        return;
+      }
+
       const payload: UpdateUserRequest = {
         name: rawValue.name.trim(),
+        surname: rawValue.surname.trim(),
         email: rawValue.email.trim(),
-        age: rawValue.age ?? 0
+        privacy_level: privacyLevel
       };
 
       const response = await firstValueFrom(
@@ -138,11 +195,13 @@ export class ProfileEditPage {
 
       this.form.setValue({
         name: response.name ?? payload.name,
+        surname: response.surname ?? payload.surname,
         email: response.email ?? payload.email,
-        age: response.age ?? payload.age
+        privacyLevel: response.privacy_level ?? payload.privacy_level
       });
       this.successMessage.set('Profilo aggiornato con successo.');
     } catch (error) {
+      console.error('Failed to update profile:', error);
       this.errorMessage.set(mapProfileError(error));
     } finally {
       this.isSubmitting.set(false);
@@ -181,6 +240,7 @@ export class ProfileEditPage {
       this.authStorage.clearSession();
       await this.router.navigate(['/login']);
     } catch (error) {
+      console.error('Failed to delete profile:', error);
       this.errorMessage.set(mapProfileError(error));
     } finally {
       this.isDeleting.set(false);
@@ -191,6 +251,8 @@ export class ProfileEditPage {
     }
   }
 }
+
+const LOAD_PROFILE_ERROR_MESSAGE = 'Non è stato possibile caricare il profilo. Riprova più tardi.';
 
 function mapProfileError(error: unknown): string {
   if (error instanceof TimeoutError) {
@@ -210,14 +272,6 @@ function mapProfileError(error: unknown): string {
   return 'Si è verificato un errore. Riprova.';
 }
 
-function maskTokenForLog(token: string | null): string {
-  if (!token) {
-    return 'missing';
-  }
-
-  if (token.length <= 10) {
-    return '***';
-  }
-
-  return `${token.slice(0, 6)}...${token.slice(-4)}`;
+function isPrivacyLevel(value: string): value is PrivacyLevel {
+  return value === '1' || value === '2';
 }

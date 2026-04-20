@@ -1,9 +1,12 @@
 import { jwtDecode } from 'jwt-decode';
 
-export function getUserIdFromToken(token: string): string {
-  const decoded = jwtDecode<any>(token);
+interface AuthTokenPayload {
+  sub?: string | number;
+  user_id?: string | number;
+}
 
-  console.log('JWT decoded payload:', decoded);
+export function getUserIdFromToken(token: string): string {
+  const decoded = jwtDecode<AuthTokenPayload>(token);
 
   if (decoded?.sub) {
     return String(decoded.sub);
@@ -14,10 +17,4 @@ export function getUserIdFromToken(token: string): string {
   }
 
   throw new Error('User ID not found in token');
-}
-
-export function getEmailFromToken(token: string): string | null {
-  const decoded = jwtDecode<any>(token);
-
-  return decoded?.email ?? null;
 }
