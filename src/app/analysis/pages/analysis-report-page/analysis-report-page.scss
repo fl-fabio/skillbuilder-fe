@@ -643,3 +643,34 @@ $content-width: 1180px;
     display: none;
   }
 }
+
+// Aggiungi questo codice in /src/app/analysis/pages/analysis-report-page/analysis-report-page.scss
+
+.btn-ask-bot {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #0f766e; // Colore primario del tema
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease-in-out;
+  margin-top: 24px; // Aggiunge spazio sopra
+
+  img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+  }
+
+  &:hover {
+    background-color: #115e59; // Tonalità più scura per l'hover
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
