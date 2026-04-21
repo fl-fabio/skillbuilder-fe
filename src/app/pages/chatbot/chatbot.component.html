@@ -1,0 +1,49 @@
+<div class="chatbot-container" [class.open]="isOpen()">
+  <!-- Finestra della Chat -->
+  <div class="chat-window" *ngIf="isOpen()">
+    <div class="chat-header">
+       <div class="header-info">
+        <img src="/icons/skillbot.png" alt="SkillBot Icon" class="bot-icon" />
+        <h3>SkillBot</h3>
+      </div>
+      <button class="close-btn" (click)="toggleChat()">✕</button>
+    </div>
+
+    <div class="chat-body">
+      <div *ngIf="history().length === 0" class="empty-state">
+        <p>Ciao! Chiedimi qualcosa sul tuo percorso di carriera e competenze.</p>
+      </div>
+
+      <div
+        *ngFor="let msg of history()"
+        class="chat-message"
+        [class.user-message]="msg.role === 'user'"
+        [class.assistant-message]="msg.role === 'assistant'"
+      >
+        {{ msg.content }}
+      </div>
+
+      <div *ngIf="isLoading()" class="chat-message assistant-message typing-indicator">
+        <span>Sta scrivendo...</span>
+      </div>
+    </div>
+
+    <div class="chat-footer">
+      <input
+        type="text"
+        [ngModel]="currentQuestion()"
+        (ngModelChange)="currentQuestion.set($event)"
+        (keyup.enter)="sendMessage()"
+        placeholder="Scrivi qui..."
+        [disabled]="isLoading()"
+      />
+      <button (click)="sendMessage()" [disabled]="isLoading() || !currentQuestion().trim()">Invia</button>
+    </div>
+  </div>
+
+  <!-- Pulsante di Toggle -->
+    <button class="chat-toggle-btn" *ngIf="!isOpen()" (click)="toggleChat()">
+    <img src="/icons/skillbot.png" alt="SkillBot Icon" class="toggle-icon" />
+    SkillBot
+  </button>
+</div>

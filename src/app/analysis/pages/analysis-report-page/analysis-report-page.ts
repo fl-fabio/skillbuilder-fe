@@ -18,6 +18,7 @@ import { AnalysisService } from '../../services/analysis.service';
 import { AuthStorageService } from '../../../core/services/auth-storage.service';
 import { getUserIdFromToken } from '../../../core/utils/jwt.utils';
 import { AnalysisStateService } from '../../services/analysis-state.service';
+import { ChatbotService } from '../../../services/chatbot.service';
 
 interface CoverageChartDatum {
   label: string;
@@ -55,6 +56,8 @@ export class AnalysisReportPage {
   private readonly analysisStateService = inject(AnalysisStateService);
   private readonly authStorage = inject(AuthStorageService);
   private readonly router = inject(Router);
+  chatbotService = inject(ChatbotService);
+
 
   constructor() {
     ensureAgChartsModulesRegistered();
@@ -67,6 +70,15 @@ export class AnalysisReportPage {
   readonly analysis = computed<AnalysisContainer | null>(
     () => this.report()?.analysis ?? null
   );
+
+  activateBotWithReport(): void {
+    const currentReport = this.report();
+    console.log(currentReport);
+    if (currentReport) {
+      // Apri la chat passando il report come gap_analysis
+      this.chatbotService.openChatWithContext(currentReport.analysis);
+    }
+  }
 
   readonly coveragePercent = computed(() =>
     this.normalizeCoverageScore(this.analysis()?.summary.coverage_score ?? 0)

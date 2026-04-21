@@ -24,7 +24,7 @@ export class SkillsEvaluationService {
       const skills = await firstValueFrom(this.api.getSkillsForJobTitle(jobTitleId));
       skills.forEach(skill => {
         if (skill.user_score === undefined) {
-          skill.user_score = 1; // Imposta un valore di default se user_score è undefined
+          skill.user_score = 0; // Imposta un valore di default se user_score è undefined
         }
       });
       this.skills.set(skills);

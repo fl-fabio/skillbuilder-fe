@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthStorageService } from './core/services/auth-storage.service';
+import { ChatbotComponent } from "./pages/chatbot/chatbot.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, ChatbotComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

@@ -65,7 +65,7 @@
                         <span class="skill-name">{{ skill.skill }}</span>
                         <span class="vote-label">
                         Voto:
-                        <span class="vote-number">{{ skill.user_score || 5 }}</span>
+                        <span class="vote-number">{{ skill.user_score ?? 5}}</span>
                         <span class="vote-max">/10</span>
                         </span>
                     </div>
@@ -73,9 +73,9 @@
                     <div class="slider-wrapper">
                         <input
                         type="range"
-                        min="1"
+                        min="0"
                         max="10"
-                        [value]="skill.user_score || 5"
+                        [value]="skill.user_score ?? 5"
                         (input)="updateScore(skill, +$any($event.target).value)"
                         class="custom-slider"
                         [style.background]="getSliderGradient(skill.user_score)"
