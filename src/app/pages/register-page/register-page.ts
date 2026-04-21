@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom, TimeoutError } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { RegisterPrivacyLevel, RegisterRequest, RegisterResponse } from '../../models/auth.models';
+import { PrivacyModalComponent } from "../../components/privacy-modal.component";
 
 type RegisterForm = FormGroup<{
   name: FormControl<string>;
@@ -17,7 +18,7 @@ type RegisterForm = FormGroup<{
 @Component({
   selector: 'app-register-page',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, PrivacyModalComponent],
   templateUrl: './register-page.html',
   styleUrl: '../login-page/login-page.scss'
 })
@@ -25,6 +26,7 @@ export class RegisterPage {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly acceptedPrivacyLevel: RegisterPrivacyLevel = '1';
+  readonly isPrivacyModalOpen = signal(false);
 
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal('');
@@ -108,6 +110,16 @@ export class RegisterPage {
       }
     }
   }
+
+  openPrivacyModal(event: MouseEvent): void {
+    event.preventDefault();
+    this.isPrivacyModalOpen.set(true);
+  }
+
+  closePrivacyModal(): void {
+    this.isPrivacyModalOpen.set(false);
+  }
+
 }
 
 function isRegisterResponse(response: unknown): response is RegisterResponse {

@@ -98,7 +98,9 @@
               formControlName="privacyAccepted"
               [disabled]="isSubmitting()"
             />
-            <span>Accetto i termini dell'informativa sulla Privacy</span>
+            Ho letto e accetto l'<a href="#" (click)="openPrivacyModal($event)">Informativa sulla Privacy</a>.
+            <app-privacy-modal [isOpen]="isPrivacyModalOpen()" (modalClose)="closePrivacyModal()"></app-privacy-modal>
+
           </label>
           @if (privacyAcceptedControl.touched && privacyAcceptedControl.hasError('required')) {
             <p class="field-error">Devi accettare l'informativa sulla Privacy.</p>
