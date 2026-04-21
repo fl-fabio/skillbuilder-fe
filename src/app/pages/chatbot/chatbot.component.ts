@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { ChatbotService } from '../../services/chatbot.service';
-import { ChatbotRequest, ChatMessage } from '../../../environments/chatbot.models';
+import { ChatbotRequest, ChatMessage } from '../../models/chatbot.models';
 
 @Component({
   selector: 'app-chatbot',

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ChatbotRequest, ChatbotResponse } from '../../environments/chatbot.models';
+import { ChatbotRequest, ChatbotResponse } from '../models/chatbot.models';
 
 
 @Injectable({
